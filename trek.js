@@ -17,7 +17,7 @@ function jglApp() {
 
 /*************************************************/
 function gameLoop() {
-    // Tell the sib-modules to draw if active
+    // Tell the sub-modules to draw if active
     map.draw();
 
     window.requestAnimFrame(gameLoop);
