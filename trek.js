@@ -12,7 +12,9 @@ function jglApp() {
     map.init();
 
     // Kick off the main animation loop
-    gameLoop();
+    setTimeout(function() {
+        gameLoop();
+    }, 500);
 }
 
 /*************************************************/

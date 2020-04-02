@@ -1,6 +1,6 @@
 var ship = {
     sprite: undefined,
-    x: 10480, y: 10228,
+    x: map.MAP_WIDTH_PIXELS / 2, y: map.MAP_HEIGHT_PIXELS / 2,
     targetThrust: 0,
     thrust: 0,
     targetRotation: 0,
@@ -12,10 +12,10 @@ var ship = {
 
 /*************************************************/
 ship.init = function() {
-    ship.sprite = map.spriteList.newSprite({id: 'ship', width: map.TILE_SIZE, height: map.TILE_SIZE, image: './images/enterprise_sprite.png'});
-    ship.sprite.setPosition(map.CENTERX, map.CENTERY);
+    ship.sprite = map.spriteList.newSprite({id: 'ship', width: 64, height: 64, image: './images/enterprise_sprite.png'});
+    ship.sprite.setPosition(map.CENTER_X, map.CENTER_Y);
     ship.sprite.setRotation(ship.rotation);
-    ship.sprite.setHotSpot(map.TILE_SIZE / 2, map.TILE_SIZE / 2);
+    ship.sprite.setHotSpot(64 / 2, 64 / 2);
 };
 
 /*************************************************/
@@ -51,7 +51,7 @@ ship.update = function() {
     } else {
         // If ship was turning and now it's not, reset the original speed
         if (ship.autoBrake) {
-            ship.targetThrust = ship.autoBrake;
+            //ship.targetThrust = ship.autoBrake;
             ship.autoBrake = 0;
         }
     }
@@ -86,8 +86,8 @@ ship.update = function() {
     }
 
     // Set Map layer to be positioned relative to our centered ship
-    map.mapX = ship.x - 448;
-    map.mapY = ship.y - 228;
+    map.mapX = ship.x - map.CENTER_X; //448;
+    map.mapY = ship.y - map.CENTER_Y; //228;
 };
 
 /*************************************************/

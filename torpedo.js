@@ -23,9 +23,6 @@ torpedo.init = function() {
         t.sprite.hide();
         torpedo.sprites.push(t);
     }
-
-    $('#overlaycanvas').mousedown(torpedo.fire);
-
 };
 
 /*************************************************/
@@ -33,15 +30,14 @@ torpedo.update = function(context) {
     for (var i = 0; i < 4; i++ ) {
         var t = torpedo.sprites[i];
         if (t.active) {
-            if ((t.distance += 6) > map.CENTERX) {
+            if ((t.distance += 6) > map.CENTER_X) {
                 t.sprite.hide();
                 t.active = false;
             } else {
                 t.sprite.setPosition(
-                    map.CENTERX + (Math.sin(t.angle * Math.PI/180) * t.distance),
-                    map.CENTERY - (Math.cos(t.angle * Math.PI/180) * t.distance));
+                    map.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
+                    map.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
             }
-            torpedo.sprites[i] = t;
         }
     }
 };
@@ -54,13 +50,11 @@ torpedo.fire = function(context) {
             t.angle = ship.rotation;
             t.distance = 24;
             t.sprite.setPosition(
-                map.CENTERX + (Math.sin(t.angle * Math.PI/180) * t.distance),
-                map.CENTERY - (Math.cos(t.angle * Math.PI/180) * t.distance));
+                map.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
+                map.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
             t.sprite.setRotation(t.angle);
             t.active = true;
             t.sprite.show();
-            torpedo.sprites[i] = t;
-            console.log("Fire!");
             break;
         }
     }
