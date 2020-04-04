@@ -7,7 +7,8 @@ var ship = {
     rotation: 0,
     rotationSpeed: 0,
     radians: 0,
-    firing: false
+    firing: false,
+    jumping: false
 };
 
 /*************************************************/
@@ -164,6 +165,17 @@ ship.processKeys = function() {
     }
     if (jgl.KEY_STATE[jgl.KEYS.N9]) {
         ship.targetThrust = 90;
+    }
+
+    if (jgl.KEY_STATE[jgl.KEYS.H]) {
+        if (!ship.jumping) {
+            ship.jumping = true;
+            $('.hyperjump').css('display','block');
+            setTimeout(function () {
+                $('.hyperjump').css('display', 'none');
+                ship.jumping = false;
+            }, 13000);
+        }
     }
 
 };
