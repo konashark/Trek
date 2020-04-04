@@ -34,7 +34,7 @@ shields.draw = function(context) {
         shields.context.arc(0,0,45,0,2 * Math.PI);
         shields.context.stroke();
 
-        context.drawImage(shields.canvas, map.CENTER_X-48, map.CENTER_Y-48);
+        context.drawImage(shields.canvas, sector.CENTER_X-48, sector.CENTER_Y-48);
         shields.context.restore();
     }
 };

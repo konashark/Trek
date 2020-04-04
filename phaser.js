@@ -29,8 +29,8 @@ phaser.fire = function(event) {
 phaser.draw = function(context) {
     // Dependencies: ship, map
     if (phaser.active) {
-        var x = map.CENTER_X + (Math.sin(ship.rotation * Math.PI/180) * 24);
-        var y = map.CENTER_Y - (Math.cos(ship.rotation * Math.PI/180) * 24);
+        var x = sector.CENTER_X + (Math.sin(ship.rotation * Math.PI/180) * 24);
+        var y = sector.CENTER_Y - (Math.cos(ship.rotation * Math.PI/180) * 24);
 
         if (!phaser.pattern) {
             phaser.pattern = context.createPattern(phaser.image, "repeat");

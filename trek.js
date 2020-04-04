@@ -18,7 +18,7 @@ function jglApp() {
 
     // Init sub-modules
     sector.init();
-    map.init();
+    sector.init();
 
     // Kick off the main animation loop
     setTimeout(function() {
@@ -30,7 +30,7 @@ function jglApp() {
 function gameLoop() {
     // Tell the sub-modules to draw if active
     if (g.mode & MODE.MAPVIEW) {
-        map.draw();
+        sector.draw();
     }
 
     window.requestAnimFrame(gameLoop);

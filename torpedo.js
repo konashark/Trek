@@ -5,33 +5,30 @@ var torpedo = {
 
 /*************************************************/
 torpedo.init = function() {
+
     jgl.newImage('./images/torpedo.png', function(image) {
         torpedo.image = image;
         for (var i = 0; i < 4; i++ ) {
-            torpedo.sprites[i].sprite.setImage(torpedo.image, 0, 0, 8, 10);
+            var t = {
+                sprite: sector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 12 }),
+                angle: 0,
+                distance: 24,
+                active: false,
+                fireSfx: new Audio('./sounds/laser.mp3'),
+                explosionSfx: new Audio('./sounds/crash.mp3')
+            };
+            t.sprite.setHotSpot(4, 4);
+            t.sprite.hide();
+            // Add it to the list of sprite
+            torpedo.sprites.push(t);
         }
     });
-
-    for (var i = 0; i < 4; i++ ) {
-        var t = {
-            sprite: map.spriteList.newSprite({id: 'torpedo'+i, width: 8, height: 10 }),
-            angle: 0,
-            distance: 24,
-            active: false,
-            fireSfx: new Audio('./sounds/laser.mp3'),
-            explosionSfx: new Audio('./sounds/crash.mp3')
-    };
-        t.sprite.setHotSpot(4, 4);
-        t.sprite.hide();
-        // Add it to the list of sprite
-        torpedo.sprites.push(t);
-    }
 
     // Example of loading and defining an animated sprite
     // Create an animated explosion sprite for each torpedo
     explosionImg = jgl.newImage("./images/explosion.png", function() {
         for (i = 0; i < 4; i++) {
-            sprite = map.spriteList.newSprite({
+            sprite = sector.spriteList.newSprite({
                 width: 88, height: 90, center: true,
                 image: explosionImg,
                 animate: true,
@@ -51,7 +48,7 @@ torpedo.init = function() {
         }
 
         // Large explosion
-        map.explosionSprite = map.spriteList.newSprite({
+        sector.explosionSprite = sector.spriteList.newSprite({
             width: 88, height: 90, scale: 4, center: true,
             image: explosionImg,
             animate: true,
@@ -65,9 +62,9 @@ torpedo.init = function() {
 
         // Define animation frames
         for (frame = 0; frame < 40; frame++) {
-            map.explosionSprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
+            sector.explosionSprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
         }
-        map.explosionSound = new Audio('./sounds/crash.mp3');
+        sector.explosionSound = new Audio('./sounds/crash.mp3');
 
         //loadComplete();
     });
@@ -78,14 +75,14 @@ torpedo.update = function(context) {
     for (var i = 0; i < 4; i++ ) {
         var t = torpedo.sprites[i];
         if (t.active) {
-            if ((t.distance += 6) > (map.CENTER_X / 2)) {
+            if ((t.distance += 6) > (sector.CENTER_X / 2)) {
                 torpedo.doExplosion(i, undefined);
                 t.sprite.hide();
                 t.active = false;
             } else {
                 t.sprite.setPosition(
-                    map.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
-                    map.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
+                    sector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
+                    sector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
             }
         }
     }
@@ -100,8 +97,8 @@ torpedo.fire = function(context) {
             t.angle = ship.rotation;
             t.distance = 24;
             t.sprite.setPosition(
-                map.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
-                map.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
+                sector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
+                sector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
             t.sprite.setRotation(t.angle);
             t.active = true;
             t.sprite.show();

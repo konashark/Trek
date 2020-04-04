@@ -1,6 +1,6 @@
 var ship = {
     sprite: undefined,
-    x: map.MAP_WIDTH_PIXELS / 2, y: map.MAP_HEIGHT_PIXELS / 2,
+    x: sector.MAP_WIDTH_PIXELS / 2, y: sector.MAP_HEIGHT_PIXELS / 2,
     targetThrust: 0,
     thrust: 0,
     targetRotation: 0,
@@ -12,8 +12,8 @@ var ship = {
 
 /*************************************************/
 ship.init = function() {
-    ship.sprite = map.spriteList.newSprite({id: 'ship', width: 64, height: 64, image: './images/enterprise_sprite.png'});
-    ship.sprite.setPosition(map.CENTER_X, map.CENTER_Y);
+    ship.sprite = sector.spriteList.newSprite({id: 'ship', width: 64, height: 64, image: './images/enterprise_sprite.png'});
+    ship.sprite.setPosition(sector.CENTER_X, sector.CENTER_Y);
     ship.sprite.setRotation(ship.rotation);
     ship.sprite.setHotSpot(64 / 2, 64 / 2);
 };
@@ -74,20 +74,20 @@ ship.update = function() {
     ship.y -= (Math.cos(ship.radians) / 4) * (ship.thrust / 10);
 
     // Keep us within the map's universe
-    if (ship.y > map.MAP_HEIGHT_PIXELS + (map.TILE_SIZE * 1.5)) {
-        ship.y = map.MAP_HEIGHT_PIXELS + (map.TILE_SIZE * 1.5);
-    } else if (ship.y < (map.TILE_SIZE * 2.5)) {
-        ship.y = map.TILE_SIZE * 2.5;
+    if (ship.y > sector.MAP_HEIGHT_PIXELS + (sector.TILE_SIZE * 1.5)) {
+        ship.y = sector.MAP_HEIGHT_PIXELS + (sector.TILE_SIZE * 1.5);
+    } else if (ship.y < (sector.TILE_SIZE * 2.5)) {
+        ship.y = sector.TILE_SIZE * 2.5;
     }
-    if (ship.x > map.MAP_WIDTH_PIXELS + (map.TILE_SIZE * 3)) {
-        ship.x = map.MAP_WIDTH_PIXELS + (map.TILE_SIZE * 3);
-    } else if (ship.x < (map.TILE_SIZE * 4)) {
-        ship.x = map.TILE_SIZE * 4;
+    if (ship.x > sector.MAP_WIDTH_PIXELS + (sector.TILE_SIZE * 3)) {
+        ship.x = sector.MAP_WIDTH_PIXELS + (sector.TILE_SIZE * 3);
+    } else if (ship.x < (sector.TILE_SIZE * 4)) {
+        ship.x = sector.TILE_SIZE * 4;
     }
 
     // Set Map layer to be positioned relative to our centered ship
-    map.mapX = ship.x - map.CENTER_X; //448;
-    map.mapY = ship.y - map.CENTER_Y; //228;
+    sector.mapX = ship.x - sector.CENTER_X; //448;
+    sector.mapY = ship.y - sector.CENTER_Y; //228;
 };
 
 /*************************************************/
@@ -123,7 +123,7 @@ ship.processKeys = function() {
 
     // Is the player accelerating?
     if (jgl.KEY_STATE[jgl.KEYS.UP]) {
-        if (ship.targetThrust < map.MAX_THRUST) {
+        if (ship.targetThrust < sector.MAX_THRUST) {
             ship.targetThrust += 1;
         }
     }

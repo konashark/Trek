@@ -27,7 +27,7 @@ navOv.draw = function(context) {
         navOv.context.lineTo(64+x, 64-y);
         navOv.context.stroke();
 
-        context.drawImage(navOv.canvas, map.CENTER_X-64, map.CENTER_Y-64);
+        context.drawImage(navOv.canvas, sector.CENTER_X-64, sector.CENTER_Y-64);
     }
 };
 
