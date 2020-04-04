@@ -1,14 +1,23 @@
 window.addEventListener("load", jglApp, false);
 
 var jgl = null;
-var g = g || {};
-g = Object.assign(g, {
-});
+var MODE = {
+    INTRO: 1,
+    MAPVIEW: 2,
+    END: 4
+};
+
+var g = {
+    mode: MODE.MAPVIEW
+};
+
+//g = Object.assign(g, {});
 
 function jglApp() {
     jgl = new Jgl;
 
     // Init sub-modules
+    sector.init();
     map.init();
 
     // Kick off the main animation loop
@@ -20,7 +29,9 @@ function jglApp() {
 /*************************************************/
 function gameLoop() {
     // Tell the sub-modules to draw if active
-    map.draw();
+    if (g.mode & MODE.MAPVIEW) {
+        map.draw();
+    }
 
     window.requestAnimFrame(gameLoop);
 }

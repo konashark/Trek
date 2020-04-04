@@ -17,18 +17,22 @@ var map = {
     MAP_VIEWPORT_HEIGHT_PIXELS: TILE_SIZE * TILES_HIGH,
     TILE_SIZE: TILE_SIZE,
     mapX: 0, mapY: 0,
+
     img: [],
     canvas: undefined,
     context: undefined,
     tmap: undefined,
 
-    sectorX: 12,
-    sectorY: 24,
-
     tile: {
         SUN: 101,
-        EARTH: 102
-    }
+        EARTH: 102,
+        STATION: 103
+    },
+
+    explosionSprite: undefined,
+    explosionSound: undefined,
+
+    objList: []
 };
 
 /*************************************************/
@@ -71,10 +75,15 @@ map.init = function() {
         mapData[49][51] = map.tile.EARTH;
     });
 
+    jgl.newImage('./images/station.png', function(image) {
+        map.tmap.newTile({ index:map.tile.STATION, img: image, x:0, y:0, w:map.TILE_SIZE, h:map.TILE_SIZE });
+        mapData[50][50] = map.tile.STATION;
+    });
+
     map.tmap.attachMap({ numColumns: map.MAP_COLS, numRows: map.MAP_ROWS, tileWidth: map.TILE_SIZE, tileHeight: map.TILE_SIZE, mapData:mapData});
     map.tmap.setPositionOffset(map.MAP_ROWS / 2, map.MAP_COLS / 2); // center of map is positioning hot spot
 
-    var makeStar = function(blank) {
+    var makeTile = function(blank) {
         var image = new Image(map.TILE_SIZE, map.TILE_SIZE);
         var canvas = jgl.convertImageToCanvas(image);
         var context = canvas.getContext("2d");
@@ -89,6 +98,8 @@ map.init = function() {
                 context.fillRect(jgl.random(map.TILE_SIZE), jgl.random(map.TILE_SIZE), size, size);
             }
         }
+
+        // Draw grid lines in tile
         context.strokeStyle = "#004000";
         context.beginPath();
         context.moveTo(0,map.TILE_SIZE/2);
@@ -137,7 +148,7 @@ map.init = function() {
 
     map.tmap.setDefaultTile({ img: canvas, x:0, y:0, w:map.TILE_SIZE, h:map.TILE_SIZE });
     for (var index = 0; index < 100; index++) {
-        map.tmap.newTile({ index:index, img: makeStar(), x:0, y:0, w:map.TILE_SIZE, h:map.TILE_SIZE });
+        map.tmap.newTile({ index:index, img: makeTile(), x:0, y:0, w:map.TILE_SIZE, h:map.TILE_SIZE });
     }
 
     // Initialize navigation overlay
@@ -154,6 +165,10 @@ map.init = function() {
     phaser.init();
     torpedo.init();
 
+};
+
+/*************************************************/
+map.initSector = function(x, y) {
 };
 
 /*************************************************/
