@@ -1,6 +1,6 @@
 var TILE_SIZE = 256;
-var TILES_WIDE = 4;
-var TILES_HIGH = 2;
+var TILES_WIDE = (window.innerWidth - 260)/TILE_SIZE;
+var TILES_HIGH = 2.25;
 
 var sector = {
     CANVAS_W: TILE_SIZE * TILES_WIDE,
@@ -38,15 +38,19 @@ var sector = {
 
 /*************************************************/
 sector.init = function() {
+    // Configure viewscreen based on size of browser window
+    $("#viewscreen")[0].width = sector.CANVAS_W;
+    $("#viewscreen")[0].height = sector.CANVAS_H;
+
     // The bottom layer into which the map is drawn
-    sector.mapcanvas = document.getElementById("mapcanvas");
+    sector.mapcanvas = $("#mapcanvas")[0];//document.getElementById("mapcanvas");
     sector.mapcanvas.width = sector.CANVAS_W;
     sector.mapcanvas.height = sector.CANVAS_H;
     sector.mapcontext = sector.mapcanvas.getContext("2d");
     sector.mapcontext.fillStyle = "#eeeeff";
 
     // The layer above the map in which sprites are drawn
-    sector.overlaycanvas = document.getElementById("overlaycanvas");
+    sector.overlaycanvas = $("#overlaycanvas")[0];//document.getElementById("overlaycanvas");
     sector.overlaycanvas.width = sector.CANVAS_W;
     sector.overlaycanvas.height = sector.CANVAS_H;
     sector.overlaycontext = sector.overlaycanvas.getContext("2d");

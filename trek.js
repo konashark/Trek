@@ -19,6 +19,8 @@ function jglApp() {
     // Init sub-modules
     sector.init();
     map.init();
+    srs.init();
+    shipstatus.init();
 
     // Kick off the main animation loop
     setTimeout(function() {
@@ -31,6 +33,8 @@ function gameLoop() {
     // Tell the sub-modules to draw if active
     if (g.mode & MODE.MAPVIEW) {
         sector.draw();
+        srs.draw();
+        shipstatus.draw();
     }
 
     window.requestAnimFrame(gameLoop);

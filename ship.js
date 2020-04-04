@@ -170,6 +170,8 @@ ship.processKeys = function() {
     if (jgl.KEY_STATE[jgl.KEYS.H]) {
         if (!ship.jumping) {
             ship.jumping = true;
+            $(".hyperjump").css("width", $("#viewscreen")[0].width+"px");
+            $(".hyperjump").css("height", $("#viewscreen")[0].height+"px");
             $('.hyperjump').css('display','block');
             setTimeout(function () {
                 $('.hyperjump').css('display', 'none');

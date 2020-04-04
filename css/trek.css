@@ -1,0 +1,38 @@
+#screen {
+    width: 100%;
+    height: 100%;
+    background-color: #111111;
+}
+
+#viewscreen {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: calc(100% - 260px);
+    height: 576px;
+}
+
+.panel {
+    position: absolute;
+    background-color: #111111;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #444444;
+    color: green;
+}
+
+#srscanvas {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 260px;
+    height: 260px;
+}
+
+#statuscanvas {
+    position: absolute;
+    top: 260px;
+    right: 0px;
+    width: 260px;
+    height: 312px;
+}
