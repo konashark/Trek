@@ -1,5 +1,5 @@
 var map = {
-    data: [[]],
+    data: undefined,
     x: 0,
     y: 0,
     MAX: 32
@@ -17,4 +17,6 @@ map.init = function() {
             };
         }
     }
+
+    sector.initSector(map.x, map.y);
 };

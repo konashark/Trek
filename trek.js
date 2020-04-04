@@ -18,7 +18,7 @@ function jglApp() {
 
     // Init sub-modules
     sector.init();
-    sector.init();
+    map.init();
 
     // Kick off the main animation loop
     setTimeout(function() {

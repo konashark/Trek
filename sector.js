@@ -32,6 +32,7 @@ var sector = {
     explosionSprite: undefined,
     explosionSound: undefined,
 
+    spriteList: [],
     objList: []
 };
 
@@ -54,6 +55,22 @@ sector.init = function() {
     console.log("Creating new map...");
     sector.tmap = jgl.newTileMapCanvas({ context: sector.mapcontext, x:0, y:0, w:sector.MAP_VIEWPORT_WIDTH_PIXELS, h:sector.MAP_VIEWPORT_HEIGHT_PIXELS });
 
+    // Initialize navigation overlay
+    navOv.init();
+    phaser.init();
+    shields.init();
+
+    // Create Sprite List
+    sector.spriteList = jgl.newSpriteList();
+
+    // Initialize ship overlay
+    ship.init();
+    phaser.init();
+    torpedo.init();
+};
+
+/*************************************************/
+sector.initSector = function(x, y) {
     console.log("Creating tiles...");
 
     mapData = [];
@@ -151,24 +168,7 @@ sector.init = function() {
         sector.tmap.newTile({ index:index, img: makeTile(), x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
     }
 
-    // Initialize navigation overlay
-    navOv.init();
-    phaser.init();
-    shields.init();
-
-    // Create Sprite List
-    sector.spriteList = jgl.newSpriteList();
-
-    // Initialize ship overlay
-    ship.init();
-    bop.init();
-    phaser.init();
-    torpedo.init();
-
-};
-
-/*************************************************/
-sector.initSector = function(x, y) {
+    enemy.init(1,1);    // Create Romulan Birds-of-Prey and Klingon D7 cruiser
 };
 
 /*************************************************/

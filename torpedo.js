@@ -1,6 +1,6 @@
 var torpedo = {
     image: undefined,
-    sprites: [],
+    objList: [],
 };
 
 /*************************************************/
@@ -14,13 +14,14 @@ torpedo.init = function() {
                 angle: 0,
                 distance: 24,
                 active: false,
+                center: true,
                 fireSfx: new Audio('./sounds/laser.mp3'),
                 explosionSfx: new Audio('./sounds/crash.mp3')
             };
             t.sprite.setHotSpot(4, 4);
             t.sprite.hide();
             // Add it to the list of sprite
-            torpedo.sprites.push(t);
+            torpedo.objList.push(t);
         }
     });
 
@@ -44,7 +45,7 @@ torpedo.init = function() {
             for (frame = 0; frame < 40; frame++) {
                 sprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
             }
-            torpedo.sprites[i].explosionSprite = sprite;
+            torpedo.objList[i].explosionSprite = sprite;
         }
 
         // Large explosion
@@ -73,16 +74,22 @@ torpedo.init = function() {
 /*************************************************/
 torpedo.update = function(context) {
     for (var i = 0; i < 4; i++ ) {
-        var t = torpedo.sprites[i];
+        var t = torpedo.objList[i];
         if (t.active) {
-            if ((t.distance += 6) > (sector.CENTER_X / 2)) {
-                torpedo.doExplosion(i, undefined);
+            if ((t.distance += 6) > sector.CENTER_X) {
                 t.sprite.hide();
                 t.active = false;
             } else {
                 t.sprite.setPosition(
                     sector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
                     sector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
+
+                // Technically, should wait until after drawing to do a collision check
+                if (enemy.didCollide(t.sprite)) {
+                    torpedo.doExplosion(i);
+                    t.sprite.hide();
+                    t.active = false;
+                }
             }
         }
     }
@@ -91,7 +98,7 @@ torpedo.update = function(context) {
 /*************************************************/
 torpedo.fire = function(context) {
     for (var i = 0; i < 4; i++ ) {
-        var t = torpedo.sprites[i];
+        var t = torpedo.objList[i];
         if (t.active === false) {
             t.fireSfx.play();
             t.angle = ship.rotation;
@@ -108,8 +115,8 @@ torpedo.fire = function(context) {
 };
 
 /*************************************************/
-torpedo.doExplosion = function(index, hitObj) {
-    var t = torpedo.sprites[index];
+torpedo.doExplosion = function(index) {
+    var t = torpedo.objList[index];
     t.explosionSfx.play();
     var sprite = t.explosionSprite;
     sprite.setRotation(Math.floor(Math.random() * 360));
