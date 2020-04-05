@@ -24,6 +24,8 @@ function jglApp() {
     gmap.init();
     srs.init();
     lrs.init();
+    comm.init();
+    info.init();
     shipstatus.init();
 
     document.addEventListener("keydown", function (ev) {

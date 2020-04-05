@@ -14,6 +14,9 @@ lrs.init = function() {
     lrs.WIDTH = lrs.CELL_WIDTH * gmap.SIZE + 100;
     lrs.HEIGHT = lrs.CELL_HEIGHT * gmap.SIZE + 100;
 
+    var offset = ($("#mapcanvas").width() - lrs.WIDTH) / 2;
+    $("#lrscanvas").css("left", offset );
+
     lrs.canvas = $("#lrscanvas")[0];
     lrs.context = lrs.canvas.getContext("2d");
 

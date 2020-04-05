@@ -13,10 +13,10 @@ shipstatus.init = function() {
 shipstatus.draw = function() {
     var ctx = shipstatus.context;
     ctx.fillStyle = "#000000";
-    ctx.fillRect(0,0,260,312);
+    ctx.fillRect(0,0,260,260);
 
     ctx.strokeStyle = "#ffffff";
-    ctx.strokeRect(0,0,260,312);
+    ctx.strokeRect(0,0,260,260);
 
     ctx.fillStyle = "#FC0";
     ctx.font = "18px sans-serif";
@@ -28,7 +28,7 @@ shipstatus.draw = function() {
     ctx.font = "14px sans-serif";
     ctx.fillText("MTIME: " + (g.missionTime/60).toFixed(0)+":"+g.missionTime%60, 128, 24);
 
-    var y = 40, tab = 24;
+    var y = 40, tab = 20;
 
     ctx.fillStyle = "#4488ff";
     ctx.fillText("ENERGY", 16, y+=tab);

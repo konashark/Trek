@@ -1,6 +1,6 @@
 var TILE_SIZE = 256;
 var TILES_WIDE = (window.innerWidth - 260)/TILE_SIZE;
-var TILES_HIGH = 2.25;
+var TILES_HIGH = 3;
 
 var sector = {
     CANVAS_W: TILE_SIZE * TILES_WIDE,
