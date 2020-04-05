@@ -36,3 +36,12 @@
     width: 260px;
     height: 312px;
 }
+
+#lrscanvas {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    width: 1000px;
+    height: 700px;
+}

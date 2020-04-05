@@ -93,6 +93,10 @@ ship.update = function() {
 
 /*************************************************/
 ship.processKeys = function() {
+    if (g.mode & MODE.LRS) {
+        return;
+    }
+
     shields.active = jgl.KEY_STATE[jgl.KEYS.FORWARD_SLASH];
 
     // Is the player rotating?

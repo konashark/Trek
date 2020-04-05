@@ -111,7 +111,7 @@ sector.initSector = function(x, y) {
         context.fillStyle = "#000000";
         context.fillRect(0,0,sector.TILE_SIZE,sector.TILE_SIZE);
         if (!blank) {
-            var numStars = jgl.randomRange(8,sector.TILE_SIZE / 4);
+            var numStars = jgl.randomRange(16,sector.TILE_SIZE / 4);
             for (var star = 0; star < numStars; star++) {
                 var luminance = jgl.randomRange(48, 255);
                 var size = jgl.randomRange(1, 3);
@@ -201,7 +201,7 @@ sector.gpsUpdate = function (context) {
     var y = sector.MAP_VIEWPORT_HEIGHT_PIXELS - 15;
     var tab = 140;
     var smtab = 90;
-    context.fillText("Sector:["+ map.x +"]["+map.y+"]", x, y);
+    context.fillText("Sector:["+ map.currentSectorX +"]["+map.currentSectorY+"]", x, y);
     context.fillText("X:"+ ship.x.toFixed(2), x+=tab+=20, y);
     context.fillText("Y:"+ ship.y.toFixed(2), x+=tab, y);
     context.fillText("Vel:"+ ship.thrust.toFixed(2), x+=tab, y);
