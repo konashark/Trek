@@ -39,8 +39,8 @@ shipstatus.draw = function() {
     ctx.fillText("COMPUTER", 16, y+=tab);
 
     ctx.fillStyle = "#66aaff";
-    ctx.fillText("HOSTILES: " + map.numHostiles, 16, y+=42);
-    ctx.fillText("STARBASES LOST: " + map.basesLost, 16, y+=tab);
-    ctx.fillText("PLANETS LOST: " + map.planetsLost, 16, y+=tab);
+    ctx.fillText("HOSTILES: " + gmap.numHostiles, 16, y+=42);
+    ctx.fillText("STARBASES LOST: " + gmap.basesLost, 16, y+=tab);
+    ctx.fillText("PLANETS LOST: " + gmap.planetsLost, 16, y+=tab);
 };
 

@@ -21,7 +21,7 @@ function jglApp() {
 
     // Init sub-modules
     sector.init();
-    map.init();
+    gmap.init();
     srs.init();
     lrs.init();
     shipstatus.init();

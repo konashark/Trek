@@ -201,7 +201,7 @@ sector.gpsUpdate = function (context) {
     var y = sector.MAP_VIEWPORT_HEIGHT_PIXELS - 15;
     var tab = 140;
     var smtab = 90;
-    context.fillText("Sector:["+ map.currentSectorX +"]["+map.currentSectorY+"]", x, y);
+    context.fillText("Sector:["+ gmap.currentSectorX +"]["+gmap.currentSectorY+"]", x, y);
     context.fillText("X:"+ ship.x.toFixed(2), x+=tab+=20, y);
     context.fillText("Y:"+ ship.y.toFixed(2), x+=tab, y);
     context.fillText("Vel:"+ ship.thrust.toFixed(2), x+=tab, y);

@@ -11,8 +11,8 @@ var lrs = {
 
 /*************************************************/
 lrs.init = function() {
-    lrs.WIDTH = lrs.CELL_WIDTH * map.SIZE + 100;
-    lrs.HEIGHT = lrs.CELL_HEIGHT * map.SIZE + 100;
+    lrs.WIDTH = lrs.CELL_WIDTH * gmap.SIZE + 100;
+    lrs.HEIGHT = lrs.CELL_HEIGHT * gmap.SIZE + 100;
 
     lrs.canvas = $("#lrscanvas")[0];
     lrs.context = lrs.canvas.getContext("2d");
@@ -20,25 +20,17 @@ lrs.init = function() {
     jgl.newImage('./images/sun_icon.png', function(image) {
         lrs.sun_icon = image;
     });
-/*
-    jgl.newImage('./images/marker_white.png', function(image) {
-        srs.shipImg = image;
+
+    jgl.newImage('./images/planet_icon.png', function(image) {
+        lrs.planet_icon = image;
     });
 
-    jgl.newImage('./images/marker_yellow.png', function(image) {
-        srs.sunImg = image;
+    jgl.newImage('./images/station_icon.png', function(image) {
+        lrs.starbase_icon = image;
     });
 
-    jgl.newImage('./images/marker_green.png', function(image) {
-        srs.planetImg = image;
-    });
-
-    jgl.newImage('./images/marker_red.png', function(image) {
-        srs.enemyImg = image;
-    });
-*/
-    lrs.mx = map.currentSectorX;
-    lrs.my = map.currentSectorY;
+    lrs.mx = gmap.currentSectorX;
+    lrs.my = gmap.currentSectorY;
 
     document.addEventListener("keydown", function (ev) {
         console.log("event");
@@ -54,12 +46,12 @@ lrs.init = function() {
                 }
             }
             if(ev.keyCode === jgl.KEYS.RIGHT){
-                if (lrs.mx < (map.SIZE - 1)) {
+                if (lrs.mx < (gmap.SIZE - 1)) {
                     lrs.mx++;
                 }
             }
             if(ev.keyCode === jgl.KEYS.DOWN){
-                if (lrs.my < (map.SIZE - 1)) {
+                if (lrs.my < (gmap.SIZE - 1)) {
                     lrs.my++;
                 }
             }
@@ -82,9 +74,10 @@ lrs.draw = function() {
     ctx.fillStyle = "#FC0";
     ctx.font = "14px sans-serif";
     ctx.fillText("LONG-RANGE SCAN", 20, 20);
+    ctx.font = "16px sans-serif";
 
     // Indicate which sector we're navigating to
-    ctx.fillStyle = "#999";
+    ctx.fillStyle = "#6af";
     ctx.fillRect(50 + (lrs.mx * lrs.CELL_WIDTH),
         50 + (lrs.my * lrs.CELL_HEIGHT),
         lrs.CELL_WIDTH,
@@ -93,23 +86,30 @@ lrs.draw = function() {
 
     // Indicate which sector we're currently in
     ctx.fillStyle = "#fff";
-    ctx.fillRect(50 + (map.currentSectorX * lrs.CELL_WIDTH),
-        50 + (map.currentSectorY * lrs.CELL_HEIGHT),
+    ctx.fillRect(50 + (gmap.currentSectorX * lrs.CELL_WIDTH),
+        50 + (gmap.currentSectorY * lrs.CELL_HEIGHT),
         lrs.CELL_WIDTH,
         lrs.CELL_HEIGHT
     );
 
     ctx.strokeStyle = "#248";
-    for (var x = 0; x < map.SIZE; x++) {
-        for (var y = 0; y < map.SIZE; y++) {
-            var sector = map.data[x][y];
+    for (var x = 0; x < gmap.SIZE; x++) {
+        for (var y = 0; y < gmap.SIZE; y++) {
+            var sector = gmap.data[x][y];
             ctx.strokeRect(50 + (x * lrs.CELL_WIDTH),
                 50 + (y * lrs.CELL_HEIGHT),
                 lrs.CELL_WIDTH,
                 lrs.CELL_HEIGHT
             );
-            if (sector && sector.sun) {
-                ctx.drawImage(lrs.sun_icon, 60 + (x * lrs.CELL_WIDTH), 54 + (y * lrs.CELL_HEIGHT));
+            if (sector.planet) {
+                ctx.drawImage(lrs.planet_icon, 54 + (x * lrs.CELL_WIDTH), 56 + (y * lrs.CELL_HEIGHT));
+            } else if (sector.sun) {
+                ctx.drawImage(lrs.sun_icon, 54 + (x * lrs.CELL_WIDTH), 54 + (y * lrs.CELL_HEIGHT));
+            } else if (sector.starbase) {
+                ctx.drawImage(lrs.starbase_icon, 54 + (x * lrs.CELL_WIDTH), 56 + (y * lrs.CELL_HEIGHT));
+            }
+            if (sector.hostiles) {
+                ctx.fillText(sector.hostiles, 82 + (x * lrs.CELL_WIDTH), 72 + (y * lrs.CELL_HEIGHT));
             }
         }
     }
