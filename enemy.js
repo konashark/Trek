@@ -17,7 +17,7 @@ enemy.init = function(bop, d7) {
 
 /*************************************************/
 enemy.addBop = function() {
-    var sprite = sector.spriteList.newSprite({id: 'bop', width: 64, height: 64, image: './images/klingon_sprite2.png'});
+    var sprite = sector.spriteList.newSprite({id: 'bop', width: 64, height: 64, image: './images/klingon_sprite2.png', center: false});
 
     sprite.setPosition(750,180);
     sprite.setRotation(230);
@@ -35,7 +35,7 @@ var d7 = {
 
 /*************************************************/
 enemy.addD7 = function() {
-    var sprite = sector.spriteList.newSprite({id: 'd7', width: 64, height: 64, image: './images/d7_sprite.png'});
+    var sprite = sector.spriteList.newSprite({id: 'd7', width: 64, height: 64, image: './images/d7_sprite.png', center: false});
 
     sprite.setPosition(300,400);
     sprite.setRotation(33);

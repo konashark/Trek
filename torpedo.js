@@ -10,15 +10,14 @@ torpedo.init = function() {
         torpedo.image = image;
         for (var i = 0; i < 4; i++ ) {
             var t = {
-                sprite: sector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 12 }),
+                sprite: sector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 12, center: true }),
                 angle: 0,
                 distance: 24,
                 active: false,
-                center: true,
                 fireSfx: new Audio('./sounds/laser.mp3'),
                 explosionSfx: new Audio('./sounds/crash.mp3')
             };
-            t.sprite.setHotSpot(4, 4);
+            //t.sprite.setHotSpot(4, 6);
             t.sprite.hide();
             // Add it to the list of sprite
             torpedo.objList.push(t);

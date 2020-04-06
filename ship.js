@@ -46,12 +46,23 @@ ship.enterOrbit = function() {
     }
     ship.orbit.state = ship.orbit.states.IN_PROGRESS;
     ship.orbit.angle = jgl.rectToPolar(sector.SECTOR_CENTER_COORD, sector.SECTOR_CENTER_COORD, ship.x, ship.y).angle;
+    ship.targetRotation = (ship.orbit.angle + 90) % 360;
     ship.orbit.distance = dist;
+};
+
+/*************************************************/
+ship.prepOrbit = function() {
+    if (ship.doRotation()) {
+        ship.sprite.setRotation(ship.rotation);
+    } else {
+        ship.orbit.state = ship.orbit.states.ORBITING;
+    }
 };
 
 /*************************************************/
 ship.doOrbit = function() {
     ship.orbit.angle  = (ship.orbit.angle + .1) % 360;
+
     ship.targetRotation = ship.rotation = (ship.orbit.angle + 90) % 360;
     ship.sprite.setRotation(ship.rotation);
 
@@ -61,9 +72,32 @@ ship.doOrbit = function() {
 
     sector.mapX = ship.x - sector.CENTER_X;
     sector.mapY = ship.y - sector.CENTER_Y;
+};
 
+/*************************************************/
+ship.doRotation = function() {
+    var delta = ship.targetRotation.toFixed(1) - ship.rotation.toFixed(1);
 
-    //console.log(ship.orbit.angle);
+    if (delta) {
+        if (delta > 180) {
+            ship.rotation -= 1;
+        } else if (delta < -180) {
+            ship.rotation += 1;
+        } else if (delta > 0) {
+            ship.rotation += 1;
+        } else {
+            ship.rotation -= 1;
+        }
+
+        if (ship.rotation < 0) {
+            ship.rotation += 360;
+        }
+        if (ship.rotation > 360) {
+            ship.rotation -= 360;
+        }
+    }
+
+    return delta;
 };
 
 /*************************************************/
@@ -79,42 +113,29 @@ ship.update = function() {
 
     ship.processKeys();
     if (ship.orbit.state) {
-        ship.doOrbit();
+        if (ship.orbit.state === ship.orbit.states.IN_PROGRESS) {
+            ship.prepOrbit();
+        }
+        if (ship.orbit.state === ship.orbit.states.ORBITING) {
+            ship.doOrbit();
+        }
         return;
     }
 
     // ROTATION
     // Turn ship towards the target rotation position
-    var delta = ship.targetRotation.toFixed(1) - ship.rotation.toFixed(1);
-
-    if (delta) {
+    if (ship.doRotation()) {
         if (ship.targetThrust < 25 && !ship.autoBrake) {
             ship.autoBrake = ship.targetThrust || 1;
             ship.targetThrust = 25;
         }
-        if (delta  > 180) {
-            ship.rotation -= 1;
-        } else if (delta < -180) {
-            ship.rotation += 1;
-        } else if (delta > 0)  {
-            ship.rotation += 1;
-        } else {
-            ship.rotation -= 1;
-        }
-
-        if (ship.rotation < 0) {
-            ship.rotation += 360;
-        }
-        if (ship.rotation > 360) {
-            ship.rotation -= 360;
-        }
     } else {
         // If ship was turning and now it's not, reset the original speed
         if (ship.autoBrake) {
-            //ship.targetThrust = ship.autoBrake;
             ship.autoBrake = 0;
         }
     }
+
     ship.radians = ship.rotation * Math.PI/180;
     ship.sprite.setRotation(ship.rotation);
 
