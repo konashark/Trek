@@ -20,8 +20,14 @@ info.draw = function() {
     ctx.strokeStyle = "#888";
     ctx.fillRect(0,0,info.WIDTH, info.HEIGHT);
     ctx.strokeRect(0,0,info.WIDTH, info.HEIGHT);
-    ctx.font = "14px sans-serif";
+    ctx.font = "15px sans-serif";
     ctx.fillStyle = "#FC0";
-    ctx.fillText("INFO", 8, 18);
+    ctx.fillText("MISSION STATUS", 16, 20);
+
+    ctx.fillStyle = "#66aaff";
+    ctx.fillText("HOSTILES: " + gmap.numHostiles, 16, 48);
+    ctx.fillText("STARBASES LOST: " + gmap.basesLost, 16, 68);
+    ctx.fillText("PLANETS LOST: " + gmap.planetsLost, 16, 88);
+
 };
 

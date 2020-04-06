@@ -8,26 +8,26 @@ var sector = {
     CENTER_X: TILE_SIZE * TILES_WIDE / 2,
     CENTER_Y: TILE_SIZE * TILES_HIGH / 2,
 
-    MAX_THRUST: 100,        // Maximum speed of our ship (in pixels per frame)
-    MAP_ROWS: 100,
-    MAP_COLS: 100,
-    MAP_WIDTH_PIXELS: 100 * TILE_SIZE,
-    MAP_HEIGHT_PIXELS: 100 * TILE_SIZE,
+    MAP_ROWS: 128,
+    MAP_COLS: 128,
+    MAP_WIDTH_PIXELS: 128 * TILE_SIZE,
+    MAP_HEIGHT_PIXELS: 128 * TILE_SIZE,
     MAP_VIEWPORT_WIDTH_PIXELS: TILE_SIZE * TILES_WIDE,
     MAP_VIEWPORT_HEIGHT_PIXELS: TILE_SIZE * TILES_HIGH,
     TILE_SIZE: TILE_SIZE,
     mapX: 0, mapY: 0,
 
-    img: [],
     canvas: undefined,
     context: undefined,
     tmap: undefined,
 
     tile: {
-        SUN: 101,
-        EARTH: 102,
-        STATION: 103
+        SUN: 100,
+        STATION: 101,
+        PLANET: 102
     },
+
+    data: undefined,
 
     explosionSprite: undefined,
     explosionSound: undefined,
@@ -59,6 +59,21 @@ sector.init = function() {
     console.log("Creating new map...");
     sector.tmap = jgl.newTileMapCanvas({ context: sector.mapcontext, x:0, y:0, w:sector.MAP_VIEWPORT_WIDTH_PIXELS, h:sector.MAP_VIEWPORT_HEIGHT_PIXELS });
 
+    // Load SUN image and place in map
+    jgl.newImage('./images/sun.png', function(image) {
+        sector.tmap.newTile({ index:sector.tile.SUN, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+    });
+
+    jgl.newImage('./images/station.png', function(image) {
+        sector.tmap.newTile({ index:sector.tile.STATION, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+    });
+
+    for (let i = 0; i < gmap.NUM_PLANETS; i++) {   // Using 'let' which binds the loop iterator to each callback. Yea!
+        jgl.newImage('./images/planets/'+i+'.png', function(image) {
+            sector.tmap.newTile({ index: (sector.tile.PLANET + i), img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+        });
+    }
+
     // Initialize navigation overlay
     navOv.init();
     phaser.init();
@@ -74,8 +89,8 @@ sector.init = function() {
 };
 
 /*************************************************/
-sector.initSector = function(x, y) {
-    console.log("Creating tiles...");
+sector.initSector = function(sectorData) {
+    sector.data = sectorData;
 
     mapData = [];
     for (var y = 0; y < sector.MAP_COLS; y++) {
@@ -85,21 +100,18 @@ sector.initSector = function(x, y) {
         }
     }
 
-    // Load SUN image and place in map
-    jgl.newImage('./images/sun.png', function(image) {
-        sector.tmap.newTile({ index:sector.tile.SUN, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
-        mapData[49][48] = sector.tile.SUN;
-    });
+    // Place sector-specific objects onto sector map
+    if (sector.data.starbase) {
+        mapData[63][63] = sector.tile.STARBASE;
+    }
 
-    jgl.newImage('./images/earth.png', function(image) {
-        sector.tmap.newTile({ index:sector.tile.EARTH, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
-        mapData[49][51] = sector.tile.EARTH;
-    });
+    if (sector.data.planet) {
+        mapData[63][63] = sector.tile.PLANET + sector.data.planet.planetIndex;
+    }
 
-    jgl.newImage('./images/station.png', function(image) {
-        sector.tmap.newTile({ index:sector.tile.STATION, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
-        mapData[50][50] = sector.tile.STATION;
-    });
+    if (sector.data.sun) {
+        mapData[sector.data.sun.tileRow][sector.data.sun.tileCol] = sector.tile.SUN;
+    }
 
     sector.tmap.attachMap({ numColumns: sector.MAP_COLS, numRows: sector.MAP_ROWS, tileWidth: sector.TILE_SIZE, tileHeight: sector.TILE_SIZE, mapData:mapData});
     sector.tmap.setPositionOffset(sector.MAP_ROWS / 2, sector.MAP_COLS / 2); // center of map is positioning hot spot
@@ -201,7 +213,6 @@ sector.gpsUpdate = function (context) {
     var y = sector.MAP_VIEWPORT_HEIGHT_PIXELS - 15;
     var tab = 140;
     var smtab = 90;
-    context.fillText("Sector:["+ gmap.currentSectorX +"]["+gmap.currentSectorY+"]", x, y);
     context.fillText("X:"+ ship.x.toFixed(2), x+=tab+=20, y);
     context.fillText("Y:"+ ship.y.toFixed(2), x+=tab, y);
     context.fillText("Vel:"+ ship.thrust.toFixed(2), x+=tab, y);

@@ -1,6 +1,6 @@
 window.addEventListener("load", jglApp, false);
 
-var jgl = undefined;
+var jgl = new Jgl;
 var MODE = {
     INTRO: 1,
     MAPVIEW: 2,
@@ -17,8 +17,6 @@ var g = {
 //g = Object.assign(g, {});
 
 function jglApp() {
-    jgl = new Jgl;
-
     // Init sub-modules
     sector.init();
     gmap.init();

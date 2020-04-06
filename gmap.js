@@ -45,7 +45,7 @@ gmap.init = function() {
     gmap.placeStarbases();
     gmap.placeHostiles();
 
-    sector.initSector(gmap.x, gmap.y);
+    sector.initSector(gmap.data[gmap.currentSectorX][gmap.currentSectorY]);
 };
 
 /*************************************************/
@@ -58,14 +58,14 @@ gmap.placeSuns = function() {
             placed = false;
             x = jgl.randomRange(0,gmap.SIZE-1);
             y = jgl.randomRange(0,gmap.SIZE-1);
-            var sector = gmap.data[x][y];
-            if (!sector.sun) {
+            var sectorData = gmap.data[x][y];
+            if (!sectorData.sun) {
                 var sun = {
                     name: "Sun " + i,
                     tileRow: jgl.randomRange(10, sector.MAP_ROWS - 10),
                     tileCol: jgl.randomRange(10, sector.MAP_COLS - 10),
                     damage: 0
-                };
+                }; console.log(sun.tileRow);
                 gmap.data[x][y].sun = sun;
                 placed = true;
             }
@@ -81,8 +81,9 @@ gmap.placePlanets = function() {
     // Place Earth at center-fixed location
     gmap.data[gmap.currentSectorX][gmap.currentSectorY].planet = {
         name: "Earth",
-        tileRow: 49,
-        tileCol: 49,
+        planetIndex: 0,
+        tileRow: 127,
+        tileCol: 127,
         damage: 0
     };
 
@@ -91,12 +92,13 @@ gmap.placePlanets = function() {
             placed = false;
             x = jgl.randomRange(0,gmap.SIZE-1);
             y = jgl.randomRange(0,gmap.SIZE-1);
-            var sector = gmap.data[x][y];
-            if (sector.sun && !sector.planet) {
+            var sectorData = gmap.data[x][y];
+            if (sectorData.sun && !sectorData.planet) {
                 var planet = {
                     name: "Planet " + i,
-                    tileRow: 49,
-                    tileCol: 49,
+                    planetIndex: i,
+                    tileRow: 127,
+                    tileCol: 127,
                     damage: 0
                 };
                 gmap.data[x][y].planet = planet;
@@ -116,12 +118,12 @@ gmap.placeStarbases = function() {
             placed = false;
             x = jgl.randomRange(0,gmap.SIZE-1);
             y = jgl.randomRange(0,gmap.SIZE-1);
-            var sector = gmap.data[x][y];
-            if (!sector.sun && !sector.planet && !sector.starbase) {
+            var sectorData = gmap.data[x][y];
+            if (!sectorData.sun && !sectorData.planet && !sectorData.starbase) {
                 var starbase = {
                     name: "Starbase " + i,
-                    tileRow: 49,
-                    tileCol: 49,
+                    tileRow: 127,
+                    tileCol: 127,
                     damage: 0
                 };
                 gmap.data[x][y].starbase = starbase;

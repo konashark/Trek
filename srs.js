@@ -36,12 +36,17 @@ srs.draw = function() {
     ctx.drawImage(srs.bg, 0, 0);
 
     ctx.fillStyle = "#FC0";
-    ctx.font = "14px sans-serif";
-    ctx.fillText("SHORT-RANGE SCAN", 8, 18);
+    ctx.font = "15px sans-serif";
+    ctx.fillText("SHORT-RANGE SCAN", 16, 18);
 
     ctx.drawImage(srs.sunImg, 74, 100);
     ctx.drawImage(srs.planetImg, 164, 160);
     ctx.drawImage(srs.enemyImg, 100, 144);
     ctx.drawImage(srs.shipImg, 124, 124);
+
+//    context.font = "20px sans-serif";
+//    context.fillStyle = "green";
+    ctx.fillText("SECTOR: "+ gmap.currentSectorX +":"+gmap.currentSectorY, 16, 248);
+
 };
 

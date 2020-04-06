@@ -1,6 +1,7 @@
 var ship = {
     sprite: undefined,
-    x: sector.MAP_WIDTH_PIXELS / 2, y: sector.MAP_HEIGHT_PIXELS / 2,
+    MAX_THRUST: 100,
+    x: sector.MAP_WIDTH_PIXELS / 2 + 128, y: sector.MAP_HEIGHT_PIXELS / 2 - 64,
     targetThrust: 0,
     thrust: 0,
     targetRotation: 0,
@@ -128,7 +129,7 @@ ship.processKeys = function() {
 
     // Is the player accelerating?
     if (jgl.KEY_STATE[jgl.KEYS.UP]) {
-        if (ship.targetThrust < sector.MAX_THRUST) {
+        if (ship.targetThrust < ship.MAX_THRUST) {
             ship.targetThrust += 1;
         }
     }
@@ -169,19 +170,6 @@ ship.processKeys = function() {
     }
     if (jgl.KEY_STATE[jgl.KEYS.N9]) {
         ship.targetThrust = 90;
-    }
-
-    if (jgl.KEY_STATE[jgl.KEYS.H]) {
-        if (!ship.jumping) {
-            ship.jumping = true;
-            $(".hyperjump").css("width", $("#viewscreen")[0].width+"px");
-            $(".hyperjump").css("height", $("#viewscreen")[0].height+"px");
-            $('.hyperjump').css('display','block');
-            setTimeout(function () {
-                $('.hyperjump').css('display', 'none');
-                ship.jumping = false;
-            }, 13000);
-        }
     }
 
 };
