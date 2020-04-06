@@ -12,8 +12,8 @@ var lrs = {
 
 /*************************************************/
 lrs.init = function() {
-    lrs.WIDTH = lrs.CELL_WIDTH * gmap.SIZE + 100;
-    lrs.HEIGHT = lrs.CELL_HEIGHT * gmap.SIZE + 100;
+    lrs.WIDTH = lrs.CELL_WIDTH * gmap.PARSEC_DIM + 100;
+    lrs.HEIGHT = lrs.CELL_HEIGHT * gmap.PARSEC_DIM + 100;
 
     var offset = ($("#mapcanvas").width() - lrs.WIDTH) / 2;
     $("#lrscanvas").css("left", offset );
@@ -50,12 +50,12 @@ lrs.init = function() {
                 }
             }
             if(ev.keyCode === jgl.KEYS.RIGHT){
-                if (lrs.mx < (gmap.SIZE - 1)) {
+                if (lrs.mx < (gmap.PARSEC_DIM - 1)) {
                     lrs.mx++;
                 }
             }
             if(ev.keyCode === jgl.KEYS.DOWN){
-                if (lrs.my < (gmap.SIZE - 1)) {
+                if (lrs.my < (gmap.PARSEC_DIM - 1)) {
                     lrs.my++;
                 }
             }
@@ -97,14 +97,14 @@ lrs.init = function() {
                 gmap.currentSectorY = lrs.my;
 
                 setTimeout(function () {
-                    $('.hyperjump').css('display', 'none');
-                    ship.jumping = false;
                     sector.initSector(gmap.data[gmap.currentSectorX][gmap.currentSectorY]);
-                    sector.mapX--; // trigger a redraw
-                    sector.mapY++; // trigger a redraw
                     ship.thrust = 0;
-                    ship.targetThrust = 10;
-                }, 11000);
+                    ship.targetThrust = 5;
+                    setTimeout(function () {
+                        $('.hyperjump').css('display', 'none');
+                        ship.jumping = false;
+                    }, 2000);
+                }, 2000);
             }
         }
     });
@@ -151,8 +151,8 @@ lrs.draw = function() {
     );
 
     ctx.strokeStyle = "#248";
-    for (var x = 0; x < gmap.SIZE; x++) {
-        for (var y = 0; y < gmap.SIZE; y++) {
+    for (var x = 0; x < gmap.PARSEC_DIM; x++) {
+        for (var y = 0; y < gmap.PARSEC_DIM; y++) {
             var sector = gmap.data[x][y];
             // Does this sector have a conflict?
             if (sector.hostiles && (sector.starbase || sector.planet)) {

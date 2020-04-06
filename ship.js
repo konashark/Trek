@@ -9,7 +9,61 @@ var ship = {
     rotationSpeed: 0,
     radians: 0,
     firing: false,
-    jumping: false
+    jumping: false,
+    orbit: {
+        states: {
+            READY: 0,
+            IN_PROGRESS: 1,
+            ORBITING: 2
+        },
+        state: 0,
+        distance: 0,
+        angle: 0
+    },
+
+};
+
+/*************************************************/
+ship.enterOrbit = function() {
+    // ORBIT
+    if (ship.orbit.state !== ship.orbit.states.READY) {
+        console.log("TBD: Orbit cancelled");
+        ship.orbit.state = ship.orbit.states.READY;
+        ship.targetThrust = ship.thrust = 10;
+        return;
+    }
+    var data = gmap.currentSector();
+    if (!data.planet) {
+        console.log("TBD: There is no planet in this sector!");
+        return;
+    }
+    // Are we close enough?
+    var dist = jgl.distance(ship.x, ship.y, sector.SECTOR_CENTER_COORD, sector.SECTOR_CENTER_COORD);
+    console.log("Distance: " + dist);
+    if (dist < 132 || dist > 200) {
+        console.log("TBD: Out of range for orbit");
+        return;
+    }
+    ship.orbit.state = ship.orbit.states.IN_PROGRESS;
+    ship.orbit.angle = jgl.rectToPolar(sector.SECTOR_CENTER_COORD, sector.SECTOR_CENTER_COORD, ship.x, ship.y).angle;
+    ship.orbit.distance = dist;
+};
+
+/*************************************************/
+ship.doOrbit = function() {
+    ship.orbit.angle  = (ship.orbit.angle + .1) % 360;
+    ship.targetRotation = ship.rotation = (ship.orbit.angle + 90) % 360;
+    ship.sprite.setRotation(ship.rotation);
+
+    ship.radians = ship.orbit.angle * Math.PI/180;
+    ship.x = sector.SECTOR_CENTER_COORD + (Math.sin(ship.radians)) * (ship.orbit.distance);
+    ship.y = sector.SECTOR_CENTER_COORD - (Math.cos(ship.radians)) * (ship.orbit.distance);
+
+    sector.mapX = ship.x - sector.CENTER_X;
+    sector.mapY = ship.y - sector.CENTER_Y;
+
+
+    //console.log(ship.orbit.angle);
 };
 
 /*************************************************/
@@ -24,6 +78,10 @@ ship.init = function() {
 ship.update = function() {
 
     ship.processKeys();
+    if (ship.orbit.state) {
+        ship.doOrbit();
+        return;
+    }
 
     // ROTATION
     // Turn ship towards the target rotation position

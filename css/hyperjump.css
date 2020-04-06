@@ -21,27 +21,11 @@
     background-size: cover;
 }
 
-
-/*
-html, body{
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
-*/
-
 body{
     background: #000;
     text-align: center;
 }
-/*
-body:before{
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
-*/
+
 .scene{
     display: inline-block;
     vertical-align: middle;
@@ -57,7 +41,7 @@ body:before{
     left: -500px;
     top: -500px;
     transform-style: preserve-3d;
-    animation: move 12s ease-in-out;
+    animation: move 4s ease-in-out; // set length
     animation-fill-mode: forwards;
     animation-delay: 0s;
 }
@@ -67,7 +51,7 @@ body:before{
     height: 100%;
     position: absolute;
     opacity: 0;
-    animation: fade 12s linear;
+    animation: fade 4s linear; // set length
     animation-delay: 0s;
 }
 

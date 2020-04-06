@@ -42,6 +42,9 @@ function jglApp() {
             }
         }
 
+        if(ev.keyCode === jgl.KEYS.O){
+            ship.enterOrbit();
+        }
     });
 
 

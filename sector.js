@@ -12,6 +12,7 @@ var sector = {
     MAP_COLS: 128,
     MAP_WIDTH_PIXELS: 128 * TILE_SIZE,
     MAP_HEIGHT_PIXELS: 128 * TILE_SIZE,
+    SECTOR_CENTER_COORD: 128 * TILE_SIZE / 2 - 64,
     MAP_VIEWPORT_WIDTH_PIXELS: TILE_SIZE * TILES_WIDE,
     MAP_VIEWPORT_HEIGHT_PIXELS: TILE_SIZE * TILES_HIGH,
     TILE_SIZE: TILE_SIZE,
@@ -24,7 +25,7 @@ var sector = {
     tile: {
         SUN: 100,
         STATION: 101,
-        PLANET: 102
+        PLANET: 102 // 102-138
     },
 
     data: undefined,
