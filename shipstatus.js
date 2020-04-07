@@ -1,14 +1,70 @@
 var shipstatus = {
     canvas: undefined,
     context: undefined,
-    energy: 1000000,
-    shields: 100,
-    phasers: 100,
-    torpedoes: (4 * 16),
-    warpdrive: 100,
-    numJumps: 0,
-    computer: 100,
-    lifesupport: 100,
+    ENERGY: 0,
+    SHIELDS: 1,
+    PHASERS: 2,
+    TORPEDOES: 3,
+    WARPDRIVE: 4,
+    COMPUTER: 5,
+    LIFESUPPORT: 6,
+
+    systems: [
+        {
+            name: "ENERGY",
+            max: 1000000,
+            level: 1000000
+        },
+        {
+            name: "SHIELD",
+            max: 100,
+            level: 100
+        },
+        {
+            name: "PHASER",
+            max: 64,
+            level: 64
+        },
+        {
+            name: "TORPS",
+            max: 64,
+            level: 64
+        },
+        {
+            name: "WARPDR",
+            max: 100,
+            level: 100
+        },
+        {
+            name: "COMPUTR",
+            max: 100,
+            level: 100
+        },
+        {
+            name: "LIFESUP",
+            max: 100,
+            level: 100
+        },
+    ],
+    alertLevel: 0,
+    ALERT_LEVELS: [
+        {
+            name: "GREEN",
+            color: "#080",
+            text: "#090"
+        },
+        {
+            name: "YELLOW",
+            color: "#B90",
+            text: "#FFF"
+        },
+        {
+            name: "RED",
+            color: "#900",
+            text: "#FFF"
+        },
+    ],
+    numJumps: 0
 };
 
 /*************************************************/
@@ -31,17 +87,37 @@ shipstatus.draw = function() {
     ctx.fillText("STATUS", 16, 22);
 
     ctx.fillStyle = "white";
-    ctx.fillText("MTIME: " + (g.missionTime/60).toFixed(0)+":"+g.missionTime%60, 128, 22);
+    ctx.fillText("MTIME: " + (g.missionTime/60).toFixed(0)+":" + (g.missionTime % 60), 112, 22);
 
-    var y = 40, tab = 22;
+    var y = 56, tab = 22;
 
-    ctx.fillStyle = "#4488ff";
-    ctx.fillText("ENERGY", 16, y+=tab);
-    ctx.fillText("SHIELDS", 16, y+=tab);
-    ctx.fillText("PHASERS", 16, y+=tab);
-    ctx.fillText("TORP", 16, y+=tab);
-    ctx.fillText("WARPDRV", 16, y+=tab);
-    ctx.fillText("COMPUTER", 16, y+=tab);
-    ctx.fillText("LIFESPRT", 16, y+=tab);
+    var gradient = ctx.createLinearGradient(112, 0, 232, 0);
+    gradient.addColorStop(0, "#800");
+    gradient.addColorStop(.4, "#CA0");
+    gradient.addColorStop(1, "#0C0");
+
+
+    shipstatus.systems.forEach(function(system, index) {
+        ctx.fillStyle = "#48F";
+        ctx.fillText(system.name, 16, y);
+
+        ctx.fillStyle = "#333";
+        ctx.fillRect(112, y - 10, 120, 9);
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(112, y - 10, (system.level / system.max) * 120, 9);
+
+        y+=tab;
+    });
+
+    ctx.font = "30px sans-serif";
+    ctx.fillStyle = shipstatus.ALERT_LEVELS[shipstatus.alertLevel].color;
+    ctx.fillRect(40, 208, 180, 40);
+    ctx.strokeStyle = "#CCC";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(40, 208, 180, 40);
+    ctx.fillStyle = shipstatus.ALERT_LEVELS[shipstatus.alertLevel].text;
+    ctx.fillText("ALERT", 82, 238);
+
 };
 

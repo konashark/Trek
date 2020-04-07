@@ -62,7 +62,7 @@ function gameLoop() {
         g.missionTime++;
 
         // These elements don't need to update at 60fps, so throttle
-        if (g.missionTime%5 === 0) {
+        if (g.missionTime%10 === 0) {
             srs.draw();
             if (g.mode & MODE.LRS) {
                 lrs.draw();

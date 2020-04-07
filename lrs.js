@@ -61,29 +61,31 @@ lrs.init = function() {
             }
 
             if (ev.keyCode === jgl.KEYS.H || ev.keyCode === jgl.KEYS.ENTER) {
+
                 if (ship.jumping) {
                     console.log("TBD: Already jumping");
                     return;
                 }
-                if (!lrs.distance) {
+
+                if (lrs.distance < 1) {
                     console.log("TBD: No destination");
                     return;
                 }
 
                 var energyNeeded = lrs.distance * 10000;
-                if (shipstatus.energy < energyNeeded) {
+                if (shipstatus.systems[shipstatus.ENERGY].level < energyNeeded) {
                     console.log("Not enough energy");
                     return;
                 }
 
-                if (!shipstatus.warpdrive) {
+                if (!shipstatus.systems[shipstatus.WARPDRIVE].level) {
                     console.log("Warp drive off-line");
                     return;
                 }
 
                 ship.jumping = true;
-                shipstatus.energy -= energyNeeded;
-                shipstatus.warpdrive -= 1;
+                shipstatus.systems[shipstatus.ENERGY].level -= energyNeeded;
+                shipstatus.systems[shipstatus.WARPDRIVE].level -= 1;
                 shipstatus.numJumps++;
 
                 g.mode &= (~MODE.LRS);

@@ -24,7 +24,7 @@ var sector = {
 
     tile: {
         SUN: 100,
-        STATION: 101,
+        STARBASE: 101,
         PLANET: 102 // 102-138
     },
 
@@ -66,7 +66,7 @@ sector.init = function() {
     });
 
     jgl.newImage('./images/station.png', function(image) {
-        sector.tmap.newTile({ index:sector.tile.STATION, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+        sector.tmap.newTile({ index:sector.tile.STARBASE, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
     });
 
     for (let i = 0; i < gmap.NUM_PLANETS; i++) {   // Using 'let' which binds the loop iterator to each callback. Yea!
@@ -92,6 +92,7 @@ sector.init = function() {
 /*************************************************/
 sector.initSector = function(sectorData) {
     sector.data = sectorData;
+    ship.orbit.state = ship.orbit.states.READY;
 
     mapData = [];
     for (var y = 0; y < sector.MAP_COLS; y++) {

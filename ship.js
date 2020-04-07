@@ -61,7 +61,7 @@ ship.prepOrbit = function() {
 
 /*************************************************/
 ship.doOrbit = function() {
-    ship.orbit.angle  = (ship.orbit.angle + .1) % 360;
+    ship.orbit.angle  = (ship.orbit.angle + .15) % 360;
 
     ship.targetRotation = ship.rotation = (ship.orbit.angle + 90) % 360;
     ship.sprite.setRotation(ship.rotation);
