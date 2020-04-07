@@ -2,7 +2,7 @@ var TILE_SIZE = 256;
 var TILES_WIDE = (window.innerWidth - 260)/TILE_SIZE;
 var TILES_HIGH = 3;
 
-var sector = {
+var gSector = {
     CANVAS_W: TILE_SIZE * TILES_WIDE,
     CANVAS_H: TILE_SIZE * TILES_HIGH,
     CENTER_X: TILE_SIZE * TILES_WIDE / 2,
@@ -38,187 +38,187 @@ var sector = {
 };
 
 /*************************************************/
-sector.init = function() {
+gSector.init = function() {
     // Configure viewscreen based on size of browser window
-    $("#viewscreen")[0].width = sector.CANVAS_W;
-    $("#viewscreen")[0].height = sector.CANVAS_H;
+    $("#viewscreen")[0].width = gSector.CANVAS_W;
+    $("#viewscreen")[0].height = gSector.CANVAS_H;
 
     // The bottom layer into which the map is drawn
-    sector.mapcanvas = $("#mapcanvas")[0];//document.getElementById("mapcanvas");
-    sector.mapcanvas.width = sector.CANVAS_W;
-    sector.mapcanvas.height = sector.CANVAS_H;
-    sector.mapcontext = sector.mapcanvas.getContext("2d");
-    sector.mapcontext.fillStyle = "#eeeeff";
+    gSector.mapcanvas = $("#mapcanvas")[0];//document.getElementById("mapcanvas");
+    gSector.mapcanvas.width = gSector.CANVAS_W;
+    gSector.mapcanvas.height = gSector.CANVAS_H;
+    gSector.mapcontext = gSector.mapcanvas.getContext("2d");
+    gSector.mapcontext.fillStyle = "#eeeeff";
 
     // The layer above the map in which sprites are drawn
-    sector.overlaycanvas = $("#overlaycanvas")[0];//document.getElementById("overlaycanvas");
-    sector.overlaycanvas.width = sector.CANVAS_W;
-    sector.overlaycanvas.height = sector.CANVAS_H;
-    sector.overlaycontext = sector.overlaycanvas.getContext("2d");
-    sector.overlaycontext.fillStyle = "#eeeeff";
+    gSector.overlaycanvas = $("#overlaycanvas")[0];//document.getElementById("overlaycanvas");
+    gSector.overlaycanvas.width = gSector.CANVAS_W;
+    gSector.overlaycanvas.height = gSector.CANVAS_H;
+    gSector.overlaycontext = gSector.overlaycanvas.getContext("2d");
+    gSector.overlaycontext.fillStyle = "#eeeeff";
 
     console.log("Creating new map...");
-    sector.tmap = jgl.newTileMapCanvas({ context: sector.mapcontext, x:0, y:0, w:sector.MAP_VIEWPORT_WIDTH_PIXELS, h:sector.MAP_VIEWPORT_HEIGHT_PIXELS });
+    gSector.tmap = jgl.newTileMapCanvas({ context: gSector.mapcontext, x:0, y:0, w:gSector.MAP_VIEWPORT_WIDTH_PIXELS, h:gSector.MAP_VIEWPORT_HEIGHT_PIXELS });
 
     // Load SUN image and place in map
     jgl.newImage('./images/sun.png', function(image) {
-        sector.tmap.newTile({ index:sector.tile.SUN, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+        gSector.tmap.newTile({ index:gSector.tile.SUN, img: image, x:0, y:0, w:gSector.TILE_SIZE, h:gSector.TILE_SIZE });
     });
 
     jgl.newImage('./images/station.png', function(image) {
-        sector.tmap.newTile({ index:sector.tile.STARBASE, img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+        gSector.tmap.newTile({ index:gSector.tile.STARBASE, img: image, x:0, y:0, w:gSector.TILE_SIZE, h:gSector.TILE_SIZE });
     });
 
-    for (let i = 0; i < gmap.NUM_PLANETS; i++) {   // Using 'let' which binds the loop iterator to each callback. Yea!
+    for (let i = 0; i < gMap.NUM_PLANETS; i++) {   // Using 'let' which binds the loop iterator to each callback. Yea!
         jgl.newImage('./images/planets/'+i+'.png', function(image) {
-            sector.tmap.newTile({ index: (sector.tile.PLANET + i), img: image, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+            gSector.tmap.newTile({ index: (gSector.tile.PLANET + i), img: image, x:0, y:0, w:gSector.TILE_SIZE, h:gSector.TILE_SIZE });
         });
     }
 
     // Initialize navigation overlay
-    navOv.init();
-    phaser.init();
-    shields.init();
+    gNavOvly.init();
+    gPhaser.init();
+    gShields.init();
 
     // Create Sprite List
-    sector.spriteList = jgl.newSpriteList();
+    gSector.spriteList = jgl.newSpriteList();
 
     // Initialize ship overlay
-    ship.init();
-    phaser.init();
-    torpedo.init();
+    gShip.init();
+    gPhaser.init();
+    gTorpedo.init();
 };
 
 /*************************************************/
-sector.initSector = function(sectorData) {
-    sector.data = sectorData;
-    ship.orbit.state = ship.orbit.states.READY;
+gSector.initSector = function(sectorData) {
+    gSector.data = sectorData;
+    gShip.orbit.state = gShip.orbit.states.READY;
 
     mapData = [];
-    for (var y = 0; y < sector.MAP_COLS; y++) {
+    for (var y = 0; y < gSector.MAP_COLS; y++) {
         mapData[y] = [];
-        for (var x = 0; x < sector.MAP_ROWS; x++) {
+        for (var x = 0; x < gSector.MAP_ROWS; x++) {
             mapData[y][x] = jgl.random(100);
         }
     }
 
     // Place sector-specific objects onto sector map
-    if (sector.data.starbase) {
-        mapData[63][63] = sector.tile.STARBASE;
+    if (gSector.data.starbase) {
+        mapData[63][63] = gSector.tile.STARBASE;
     }
 
-    if (sector.data.planet) {
-        mapData[63][63] = sector.tile.PLANET + sector.data.planet.planetIndex;
+    if (gSector.data.planet) {
+        mapData[63][63] = gSector.tile.PLANET + gSector.data.planet.planetIndex;
     }
 
-    if (sector.data.sun) {
-        mapData[sector.data.sun.tileRow][sector.data.sun.tileCol] = sector.tile.SUN;
+    if (gSector.data.sun) {
+        mapData[gSector.data.sun.tileRow][gSector.data.sun.tileCol] = gSector.tile.SUN;
     }
 
-    sector.tmap.attachMap({ numColumns: sector.MAP_COLS, numRows: sector.MAP_ROWS, tileWidth: sector.TILE_SIZE, tileHeight: sector.TILE_SIZE, mapData:mapData});
-    sector.tmap.setPositionOffset(sector.MAP_ROWS / 2, sector.MAP_COLS / 2); // center of map is positioning hot spot
+    gSector.tmap.attachMap({ numColumns: gSector.MAP_COLS, numRows: gSector.MAP_ROWS, tileWidth: gSector.TILE_SIZE, tileHeight: gSector.TILE_SIZE, mapData:mapData});
+    gSector.tmap.setPositionOffset(gSector.MAP_ROWS / 2, gSector.MAP_COLS / 2); // center of map is positioning hot spot
 
     var makeTile = function(blank) {
-        var image = new Image(sector.TILE_SIZE, sector.TILE_SIZE);
+        var image = new Image(gSector.TILE_SIZE, gSector.TILE_SIZE);
         var canvas = jgl.convertImageToCanvas(image);
         var context = canvas.getContext("2d");
         context.fillStyle = "#000000";
-        context.fillRect(0,0,sector.TILE_SIZE,sector.TILE_SIZE);
+        context.fillRect(0,0,gSector.TILE_SIZE,gSector.TILE_SIZE);
         if (!blank) {
-            var numStars = jgl.randomRange(16,sector.TILE_SIZE / 4);
+            var numStars = jgl.randomRange(16,gSector.TILE_SIZE / 4);
             for (var star = 0; star < numStars; star++) {
                 var luminance = jgl.randomRange(48, 255);
                 var size = jgl.randomRange(1, 3);
                 context.fillStyle = 'rgb(' + luminance + ',' + luminance + ',' + luminance + ')';
-                context.fillRect(jgl.random(sector.TILE_SIZE), jgl.random(sector.TILE_SIZE), size, size);
+                context.fillRect(jgl.random(gSector.TILE_SIZE), jgl.random(gSector.TILE_SIZE), size, size);
             }
         }
 
         // Draw grid lines in tile
         context.strokeStyle = "#004000";
         context.beginPath();
-        context.moveTo(0,sector.TILE_SIZE/2);
-        context.lineTo(sector.TILE_SIZE,sector.TILE_SIZE/2);
+        context.moveTo(0,gSector.TILE_SIZE/2);
+        context.lineTo(gSector.TILE_SIZE,gSector.TILE_SIZE/2);
         context.stroke();
         context.beginPath();
-        context.moveTo(sector.TILE_SIZE/2,0);
-        context.lineTo(sector.TILE_SIZE/2,sector.TILE_SIZE);
-        context.stroke();
-
-        context.strokeStyle = "#002800";
-        context.beginPath();
-        context.moveTo(0,sector.TILE_SIZE/4);
-        context.lineTo(sector.TILE_SIZE,sector.TILE_SIZE/4);
-        context.stroke();
-        context.beginPath();
-        context.moveTo(sector.TILE_SIZE/4,0);
-        context.lineTo(sector.TILE_SIZE/4,sector.TILE_SIZE);
+        context.moveTo(gSector.TILE_SIZE/2,0);
+        context.lineTo(gSector.TILE_SIZE/2,gSector.TILE_SIZE);
         context.stroke();
 
         context.strokeStyle = "#002800";
         context.beginPath();
-        context.moveTo(0,sector.TILE_SIZE *.75);
-        context.lineTo(sector.TILE_SIZE,sector.TILE_SIZE *.75);
+        context.moveTo(0,gSector.TILE_SIZE/4);
+        context.lineTo(gSector.TILE_SIZE,gSector.TILE_SIZE/4);
         context.stroke();
         context.beginPath();
-        context.moveTo(sector.TILE_SIZE *.75,0);
-        context.lineTo(sector.TILE_SIZE *.75,sector.TILE_SIZE);
+        context.moveTo(gSector.TILE_SIZE/4,0);
+        context.lineTo(gSector.TILE_SIZE/4,gSector.TILE_SIZE);
+        context.stroke();
+
+        context.strokeStyle = "#002800";
+        context.beginPath();
+        context.moveTo(0,gSector.TILE_SIZE *.75);
+        context.lineTo(gSector.TILE_SIZE,gSector.TILE_SIZE *.75);
+        context.stroke();
+        context.beginPath();
+        context.moveTo(gSector.TILE_SIZE *.75,0);
+        context.lineTo(gSector.TILE_SIZE *.75,gSector.TILE_SIZE);
         context.stroke();
 
         context.strokeStyle = "#007700";
         context.beginPath();
-        context.moveTo(0,sector.TILE_SIZE-1);
+        context.moveTo(0,gSector.TILE_SIZE-1);
         context.lineTo(0,0);
-        context.lineTo(sector.TILE_SIZE-1,0);
+        context.lineTo(gSector.TILE_SIZE-1,0);
         context.stroke();
 
         return canvas;
     };
 
-    var image = new Image(sector.TILE_SIZE, sector.TILE_SIZE);
+    var image = new Image(gSector.TILE_SIZE, gSector.TILE_SIZE);
     var canvas = jgl.convertImageToCanvas(image);
     var context = canvas.getContext("2d");
     context.fillStyle = "#000033";
-    context.fillRect(0,0,sector.TILE_SIZE,sector.TILE_SIZE);
+    context.fillRect(0,0,gSector.TILE_SIZE,gSector.TILE_SIZE);
 
-    sector.tmap.setDefaultTile({ img: canvas, x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+    gSector.tmap.setDefaultTile({ img: canvas, x:0, y:0, w:gSector.TILE_SIZE, h:gSector.TILE_SIZE });
     for (var index = 0; index < 100; index++) {
-        sector.tmap.newTile({ index:index, img: makeTile(), x:0, y:0, w:sector.TILE_SIZE, h:sector.TILE_SIZE });
+        gSector.tmap.newTile({ index:index, img: makeTile(), x:0, y:0, w:gSector.TILE_SIZE, h:gSector.TILE_SIZE });
     }
 
-    enemy.init(1,1);    // Create Romulan Birds-of-Prey and Klingon D7 cruiser
+    gEnemy.init(1,1);    // Create Romulan Birds-of-Prey and Klingon D7 cruiser
 };
 
 /*************************************************/
-sector.draw = function() {
-    ship.update();
+gSector.draw = function() {
+    gShip.update();
 
-    sector.tmap.drawMap(sector.mapX, sector.mapY);
+    gSector.tmap.drawMap(gSector.mapX, gSector.mapY);
 
-    sector.overlaycontext.clearRect(0,0, sector.CANVAS_W, sector.CANVAS_H);
+    gSector.overlaycontext.clearRect(0,0, gSector.CANVAS_W, gSector.CANVAS_H);
 
-    navOv.draw(sector.overlaycontext);
-    torpedo.update(sector.overlaycontext);
-    shields.draw(sector.overlaycontext);
+    gNavOvly.draw(gSector.overlaycontext);
+    gTorpedo.update(gSector.overlaycontext);
+    gShields.draw(gSector.overlaycontext);
 
-    sector.spriteList.drawSprites(sector.overlaycontext);
-    phaser.draw(sector.overlaycontext);
+    gSector.spriteList.drawSprites(gSector.overlaycontext);
+    gPhaser.draw(gSector.overlaycontext);
 
-    sector.gpsUpdate(sector.overlaycontext);
+    gSector.gpsUpdate(gSector.overlaycontext);
 };
 
 /*************************************************/
-sector.gpsUpdate = function (context) {
+gSector.gpsUpdate = function (context) {
     context.font = "20px sans-serif";
     context.fillStyle = "green";
     var x = 32;
-    var y = sector.MAP_VIEWPORT_HEIGHT_PIXELS - 15;
+    var y = gSector.MAP_VIEWPORT_HEIGHT_PIXELS - 15;
     var tab = 140;
     var smtab = 90;
-    context.fillText("X:"+ ship.x.toFixed(2), x+=tab+=20, y);
-    context.fillText("Y:"+ ship.y.toFixed(2), x+=tab, y);
-    context.fillText("Vel:"+ ship.thrust.toFixed(2), x+=tab, y);
-    context.fillText("Head:"+ ship.rotation.toFixed(2), x+=tab, y);
+    context.fillText("X:"+ gShip.x.toFixed(2), x+=tab+=20, y);
+    context.fillText("Y:"+ gShip.y.toFixed(2), x+=tab, y);
+    context.fillText("Vel:"+ gShip.thrust.toFixed(2), x+=tab, y);
+    context.fillText("Head:"+ gShip.rotation.toFixed(2), x+=tab, y);
 };
 
 

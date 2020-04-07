@@ -1,4 +1,4 @@
-var lrs = {
+var gLrs = {
     canvas: undefined,
     context: undefined,
     CELL_WIDTH: 50,
@@ -11,82 +11,83 @@ var lrs = {
 };
 
 /*************************************************/
-lrs.init = function() {
-    lrs.WIDTH = lrs.CELL_WIDTH * gmap.PARSEC_DIM + 100;
-    lrs.HEIGHT = lrs.CELL_HEIGHT * gmap.PARSEC_DIM + 100;
+gLrs.init = function() {
+    // How big to make the canvas
+    gLrs.WIDTH = gLrs.CELL_WIDTH * gMap.PARSEC_DIM + 100;
+    gLrs.HEIGHT = gLrs.CELL_HEIGHT * gMap.PARSEC_DIM + 100;
 
-    var offset = ($("#mapcanvas").width() - lrs.WIDTH) / 2;
+    var offset = ($("#mapcanvas").width() - gLrs.WIDTH) / 2;
     $("#lrscanvas").css("left", offset );
 
-    lrs.canvas = $("#lrscanvas")[0];
-    lrs.context = lrs.canvas.getContext("2d");
+    gLrs.canvas = $("#lrscanvas")[0];
+    gLrs.context = gLrs.canvas.getContext("2d");
 
     jgl.newImage('./images/sun_icon.png', function(image) {
-        lrs.sun_icon = image;
+        gLrs.sun_icon = image;
     });
 
     jgl.newImage('./images/planet_icon.png', function(image) {
-        lrs.planet_icon = image;
+        gLrs.planet_icon = image;
     });
 
     jgl.newImage('./images/station_icon.png', function(image) {
-        lrs.starbase_icon = image;
+        gLrs.starbase_icon = image;
     });
 
-    lrs.mx = gmap.currentSectorX;
-    lrs.my = gmap.currentSectorY;
+    gLrs.mx = gMap.currentSectorX;
+    gLrs.my = gMap.currentSectorY;
 
     document.addEventListener("keydown", function (ev) {
         console.log("event");
         if (g.mode & MODE.LRS) {
             if(ev.keyCode === jgl.KEYS.LEFT){
-                if (lrs.mx) {
-                    lrs.mx--;
+                if (gLrs.mx) {
+                    gLrs.mx--;
                 }
             }
             if(ev.keyCode === jgl.KEYS.UP){
-                if (lrs.my) {
-                    lrs.my--;
+                if (gLrs.my) {
+                    gLrs.my--;
                 }
             }
             if(ev.keyCode === jgl.KEYS.RIGHT){
-                if (lrs.mx < (gmap.PARSEC_DIM - 1)) {
-                    lrs.mx++;
+                if (gLrs.mx < (gMap.PARSEC_DIM - 1)) {
+                    gLrs.mx++;
                 }
             }
             if(ev.keyCode === jgl.KEYS.DOWN){
-                if (lrs.my < (gmap.PARSEC_DIM - 1)) {
-                    lrs.my++;
+                if (gLrs.my < (gMap.PARSEC_DIM - 1)) {
+                    gLrs.my++;
                 }
             }
 
             if (ev.keyCode === jgl.KEYS.H || ev.keyCode === jgl.KEYS.ENTER) {
 
-                if (ship.jumping) {
+                if (gShip.jumping) {
                     console.log("TBD: Already jumping");
                     return;
                 }
 
-                if (lrs.distance < 1) {
+                if (gLrs.distance < 1) {
                     console.log("TBD: No destination");
                     return;
                 }
 
-                var energyNeeded = lrs.distance * 10000;
-                if (shipstatus.systems[shipstatus.ENERGY].level < energyNeeded) {
+                var energyNeeded = gLrs.distance * 10000;
+                if (gShipstatus.systems[gShipstatus.ENERGY].level < energyNeeded) {
                     console.log("Not enough energy");
                     return;
                 }
 
-                if (!shipstatus.systems[shipstatus.WARPDRIVE].level) {
+                if (!gShipstatus.systems[gShipstatus.WARPDRIVE].level) {
                     console.log("Warp drive off-line");
                     return;
                 }
 
-                ship.jumping = true;
-                shipstatus.systems[shipstatus.ENERGY].level -= energyNeeded;
-                shipstatus.systems[shipstatus.WARPDRIVE].level -= 1;
-                shipstatus.numJumps++;
+                gShip.jumping = true;
+                gShipstatus.systems[gShipstatus.ENERGY].level -= energyNeeded;
+                gShipstatus.systems[gShipstatus.WARPDRIVE].level -= 1;
+                gShipstatus.numJumps++;
 
                 g.mode &= (~MODE.LRS);
                 $("#lrscanvas").css('display','none');
@@ -95,16 +96,16 @@ lrs.init = function() {
                 $(".hyperjump").css("width", $("#viewscreen")[0].width+"px");
                 $(".hyperjump").css("height", $("#viewscreen")[0].height+"px");
                 $('.hyperjump').css('display','block');
-                gmap.currentSectorX = lrs.mx;
-                gmap.currentSectorY = lrs.my;
+                gMap.currentSectorX = gLrs.mx;
+                gMap.currentSectorY = gLrs.my;
 
                 setTimeout(function () {
-                    sector.initSector(gmap.data[gmap.currentSectorX][gmap.currentSectorY]);
-                    ship.thrust = 0;
-                    ship.targetThrust = 5;
+                    gSector.initSector(gMap.data[gMap.currentSectorX][gMap.currentSectorY]);
+                    gShip.thrust = 0;
+                    gShip.targetThrust = 5;
                     setTimeout(function () {
                         $('.hyperjump').css('display', 'none');
-                        ship.jumping = false;
+                        gShip.jumping = false;
                     }, 2000);
                 }, 2000);
             }
@@ -114,19 +115,19 @@ lrs.init = function() {
 };
 
 /*************************************************/
-lrs.draw = function() {
-    var ctx = lrs.context;
+gLrs.draw = function() {
+    var ctx = gLrs.context;
 
 
     ctx.fillStyle = "#111";
-    ctx.fillRect(0,0,lrs.WIDTH,lrs.HEIGHT);
+    ctx.fillRect(0,0,gLrs.WIDTH,gLrs.HEIGHT);
     ctx.strokeStyle = "#888";
-    ctx.strokeRect(0,0,lrs.WIDTH,lrs.HEIGHT);
+    ctx.strokeRect(0,0,gLrs.WIDTH,gLrs.HEIGHT);
 
     ctx.fillStyle = "#080808";
-    ctx.fillRect(50,50,lrs.WIDTH-50,lrs.HEIGHT-50);
+    ctx.fillRect(50,50,gLrs.WIDTH-50,gLrs.HEIGHT-50);
     ctx.strokeStyle = "#888";
-    ctx.strokeRect(0,0,lrs.WIDTH,lrs.HEIGHT);
+    ctx.strokeRect(0,0,gLrs.WIDTH,gLrs.HEIGHT);
 
     ctx.strokeStyle = "#C80";
     ctx.fillStyle = "#FC0";
@@ -137,61 +138,61 @@ lrs.draw = function() {
     // Indicate which sector we're navigating to
     ctx.strokeStyle = "#6af";
     ctx.lineWidth = 4;
-    ctx.strokeRect(50 + (lrs.mx * lrs.CELL_WIDTH),
-        50 + (lrs.my * lrs.CELL_HEIGHT),
-        lrs.CELL_WIDTH,
-        lrs.CELL_HEIGHT
+    ctx.strokeRect(50 + (gLrs.mx * gLrs.CELL_WIDTH),
+        50 + (gLrs.my * gLrs.CELL_HEIGHT),
+        gLrs.CELL_WIDTH,
+        gLrs.CELL_HEIGHT
     );
     ctx.lineWidth = 1;
 
     // Indicate which sector we're currently in
     ctx.fillStyle = "#fff";
-    ctx.fillRect(50 + (gmap.currentSectorX * lrs.CELL_WIDTH),
-        50 + (gmap.currentSectorY * lrs.CELL_HEIGHT),
-        lrs.CELL_WIDTH,
-        lrs.CELL_HEIGHT
+    ctx.fillRect(50 + (gMap.currentSectorX * gLrs.CELL_WIDTH),
+        50 + (gMap.currentSectorY * gLrs.CELL_HEIGHT),
+        gLrs.CELL_WIDTH,
+        gLrs.CELL_HEIGHT
     );
 
     ctx.strokeStyle = "#248";
-    for (var x = 0; x < gmap.PARSEC_DIM; x++) {
-        for (var y = 0; y < gmap.PARSEC_DIM; y++) {
-            var sector = gmap.data[x][y];
+    for (var x = 0; x < gMap.PARSEC_DIM; x++) {
+        for (var y = 0; y < gMap.PARSEC_DIM; y++) {
+            var sector = gMap.data[x][y];
             // Does this sector have a conflict?
             if (sector.hostiles && (sector.starbase || sector.planet)) {
                 sector.conflict = true;
                 ctx.fillStyle = "#811";
-                ctx.fillRect(50 + (x * lrs.CELL_WIDTH),
-                    50 + (y * lrs.CELL_HEIGHT),
-                    lrs.CELL_WIDTH,
-                    lrs.CELL_HEIGHT
+                ctx.fillRect(50 + (x * gLrs.CELL_WIDTH),
+                    50 + (y * gLrs.CELL_HEIGHT),
+                    gLrs.CELL_WIDTH,
+                    gLrs.CELL_HEIGHT
                 );
             } else {
                 sector.conflict = false;
             }
 
-            ctx.strokeRect(50 + (x * lrs.CELL_WIDTH),
-                50 + (y * lrs.CELL_HEIGHT),
-                lrs.CELL_WIDTH,
-                lrs.CELL_HEIGHT
+            ctx.strokeRect(50 + (x * gLrs.CELL_WIDTH),
+                50 + (y * gLrs.CELL_HEIGHT),
+                gLrs.CELL_WIDTH,
+                gLrs.CELL_HEIGHT
             );
             if (sector.planet) {
-                ctx.drawImage(lrs.planet_icon, 54 + (x * lrs.CELL_WIDTH), 56 + (y * lrs.CELL_HEIGHT));
+                ctx.drawImage(gLrs.planet_icon, 54 + (x * gLrs.CELL_WIDTH), 56 + (y * gLrs.CELL_HEIGHT));
             } else if (sector.sun) {
-                ctx.drawImage(lrs.sun_icon, 54 + (x * lrs.CELL_WIDTH), 54 + (y * lrs.CELL_HEIGHT));
+                ctx.drawImage(gLrs.sun_icon, 54 + (x * gLrs.CELL_WIDTH), 54 + (y * gLrs.CELL_HEIGHT));
             } else if (sector.starbase) {
-                ctx.drawImage(lrs.starbase_icon, 54 + (x * lrs.CELL_WIDTH), 56 + (y * lrs.CELL_HEIGHT));
+                ctx.drawImage(gLrs.starbase_icon, 54 + (x * gLrs.CELL_WIDTH), 56 + (y * gLrs.CELL_HEIGHT));
             }
             if (sector.hostiles) {
                 ctx.fillStyle = "white";
-                ctx.fillText(sector.hostiles, 82 + (x * lrs.CELL_WIDTH), 72 + (y * lrs.CELL_HEIGHT));
+                ctx.fillText(sector.hostiles, 82 + (x * gLrs.CELL_WIDTH), 72 + (y * gLrs.CELL_HEIGHT));
             }
         }
     }
 
     // Update header - show hyperjump distance
-    lrs.distance = jgl.distance(gmap.currentSectorX, gmap.currentSectorY, lrs.mx, lrs.my).toFixed(2);
-    ctx.fillText("DIST: " + lrs.distance, 320, 20);
-    ctx.fillText("ENERGY REQUIRED: " + ~~(lrs.distance * 10000), 450, 20);
+    gLrs.distance = jgl.distance(gMap.currentSectorX, gMap.currentSectorY, gLrs.mx, gLrs.my).toFixed(2);
+    ctx.fillText("DIST: " + gLrs.distance, 320, 20);
+    ctx.fillText("ENERGY REQUIRED: " + ~~(gLrs.distance * 10000), 450, 20);
 
 };
 

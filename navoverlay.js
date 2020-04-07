@@ -1,33 +1,33 @@
-var navOv = {
+var gNavOvly = {
     canvas: undefined,
     context: undefined,
     active: false
 };
 
 /*************************************************/
-navOv.init = function() {
+gNavOvly.init = function() {
     // Create NAV overlay
     var navImg = new Image(128, 128);
-    navOv.canvas = jgl.convertImageToCanvas(navImg);
-    navOv.context = navOv.canvas.getContext("2d");
+    gNavOvly.canvas = jgl.convertImageToCanvas(navImg);
+    gNavOvly.context = gNavOvly.canvas.getContext("2d");
 };
 
 /*************************************************/
-navOv.draw = function(context) {
+gNavOvly.draw = function(context) {
     // Update Nav Overlay
     // Dependencies: ship
-    if (navOv.active){
-        var x = (Math.sin(ship.targetRotation * Math.PI/180) * 64);
-        var y = (Math.cos(ship.targetRotation * Math.PI/180) * 64);
+    if (gNavOvly.active){
+        var x = (Math.sin(gShip.targetRotation * Math.PI/180) * 64);
+        var y = (Math.cos(gShip.targetRotation * Math.PI/180) * 64);
 
-        navOv.context.clearRect(0,0,128,128);
-        navOv.context.strokeStyle = "#eecc00";
-        navOv.context.beginPath();
-        navOv.context.moveTo(64,64);
-        navOv.context.lineTo(64+x, 64-y);
-        navOv.context.stroke();
+        gNavOvly.context.clearRect(0,0,128,128);
+        gNavOvly.context.strokeStyle = "#eecc00";
+        gNavOvly.context.beginPath();
+        gNavOvly.context.moveTo(64,64);
+        gNavOvly.context.lineTo(64+x, 64-y);
+        gNavOvly.context.stroke();
 
-        context.drawImage(navOv.canvas, sector.CENTER_X-64, sector.CENTER_Y-64);
+        context.drawImage(gNavOvly.canvas, gSector.CENTER_X-64, gSector.CENTER_Y-64);
     }
 };
 

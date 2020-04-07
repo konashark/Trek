@@ -1,16 +1,16 @@
-var torpedo = {
+var gTorpedo = {
     image: undefined,
     objList: [],
 };
 
 /*************************************************/
-torpedo.init = function() {
+gTorpedo.init = function() {
 
     jgl.newImage('./images/torpedo.png', function(image) {
-        torpedo.image = image;
+        gTorpedo.image = image;
         for (var i = 0; i < 4; i++ ) {
             var t = {
-                sprite: sector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 12, center: true }),
+                sprite: gSector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 12, center: true }),
                 angle: 0,
                 distance: 24,
                 active: false,
@@ -20,7 +20,7 @@ torpedo.init = function() {
             //t.sprite.setHotSpot(4, 6);
             t.sprite.hide();
             // Add it to the list of sprite
-            torpedo.objList.push(t);
+            gTorpedo.objList.push(t);
         }
     });
 
@@ -28,7 +28,7 @@ torpedo.init = function() {
     // Create an animated explosion sprite for each torpedo
     explosionImg = jgl.newImage("./images/explosion.png", function() {
         for (i = 0; i < 4; i++) {
-            sprite = sector.spriteList.newSprite({
+            sprite = gSector.spriteList.newSprite({
                 width: 88, height: 90, center: true,
                 image: explosionImg,
                 animate: true,
@@ -44,11 +44,11 @@ torpedo.init = function() {
             for (frame = 0; frame < 40; frame++) {
                 sprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
             }
-            torpedo.objList[i].explosionSprite = sprite;
+            gTorpedo.objList[i].explosionSprite = sprite;
         }
 
         // Large explosion
-        sector.explosionSprite = sector.spriteList.newSprite({
+        gSector.explosionSprite = gSector.spriteList.newSprite({
             width: 88, height: 90, scale: 4, center: true,
             image: explosionImg,
             animate: true,
@@ -62,30 +62,30 @@ torpedo.init = function() {
 
         // Define animation frames
         for (frame = 0; frame < 40; frame++) {
-            sector.explosionSprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
+            gSector.explosionSprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
         }
-        sector.explosionSound = new Audio('./sounds/crash.mp3');
+        gSector.explosionSound = new Audio('./sounds/crash.mp3');
 
         //loadComplete();
     });
 };
 
 /*************************************************/
-torpedo.update = function(context) {
+gTorpedo.update = function(context) {
     for (var i = 0; i < 4; i++ ) {
-        var t = torpedo.objList[i];
+        var t = gTorpedo.objList[i];
         if (t.active) {
-            if ((t.distance += 6) > sector.CENTER_X) {
+            if ((t.distance += 6) > gSector.CENTER_X) {
                 t.sprite.hide();
                 t.active = false;
             } else {
                 t.sprite.setPosition(
-                    sector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
-                    sector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
+                    gSector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
+                    gSector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
 
                 // Technically, should wait until after drawing to do a collision check
-                if (enemy.didCollide(t.sprite)) {
-                    torpedo.doExplosion(i);
+                if (gEnemy.didCollide(t.sprite)) {
+                    gTorpedo.doExplosion(i);
                     t.sprite.hide();
                     t.active = false;
                 }
@@ -95,16 +95,16 @@ torpedo.update = function(context) {
 };
 
 /*************************************************/
-torpedo.fire = function(context) {
+gTorpedo.fire = function(context) {
     for (var i = 0; i < 4; i++ ) {
-        var t = torpedo.objList[i];
+        var t = gTorpedo.objList[i];
         if (t.active === false) {
             t.fireSfx.play();
-            t.angle = ship.rotation;
+            t.angle = gShip.rotation;
             t.distance = 24;
             t.sprite.setPosition(
-                sector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
-                sector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
+                gSector.CENTER_X + (Math.sin(t.angle * Math.PI/180) * t.distance),
+                gSector.CENTER_Y - (Math.cos(t.angle * Math.PI/180) * t.distance));
             t.sprite.setRotation(t.angle);
             t.active = true;
             t.sprite.show();
@@ -114,8 +114,8 @@ torpedo.fire = function(context) {
 };
 
 /*************************************************/
-torpedo.doExplosion = function(index) {
-    var t = torpedo.objList[index];
+gTorpedo.doExplosion = function(index) {
+    var t = gTorpedo.objList[index];
     t.explosionSfx.play();
     var sprite = t.explosionSprite;
     sprite.setRotation(Math.floor(Math.random() * 360));

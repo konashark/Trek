@@ -1,4 +1,4 @@
-var shipstatus = {
+var gShipstatus = {
     canvas: undefined,
     context: undefined,
     ENERGY: 0,
@@ -68,14 +68,14 @@ var shipstatus = {
 };
 
 /*************************************************/
-shipstatus.init = function() {
-    shipstatus.canvas = $("#statuscanvas")[0];
-    shipstatus.context = shipstatus.canvas.getContext("2d");
+gShipstatus.init = function() {
+    gShipstatus.canvas = $("#statuscanvas")[0];
+    gShipstatus.context = gShipstatus.canvas.getContext("2d");
 };
 
 /*************************************************/
-shipstatus.draw = function() {
-    var ctx = shipstatus.context;
+gShipstatus.draw = function() {
+    var ctx = gShipstatus.context;
     ctx.fillStyle = "#000000";
     ctx.fillRect(0,0,260,260);
 
@@ -97,7 +97,7 @@ shipstatus.draw = function() {
     gradient.addColorStop(1, "#0C0");
 
 
-    shipstatus.systems.forEach(function(system, index) {
+    gShipstatus.systems.forEach(function(system, index) {
         ctx.fillStyle = "#48F";
         ctx.fillText(system.name, 16, y);
 
@@ -111,12 +111,12 @@ shipstatus.draw = function() {
     });
 
     ctx.font = "30px sans-serif";
-    ctx.fillStyle = shipstatus.ALERT_LEVELS[shipstatus.alertLevel].color;
+    ctx.fillStyle = gShipstatus.ALERT_LEVELS[gShipstatus.alertLevel].color;
     ctx.fillRect(40, 208, 180, 40);
     ctx.strokeStyle = "#CCC";
     ctx.lineWidth = 2;
     ctx.strokeRect(40, 208, 180, 40);
-    ctx.fillStyle = shipstatus.ALERT_LEVELS[shipstatus.alertLevel].text;
+    ctx.fillStyle = gShipstatus.ALERT_LEVELS[gShipstatus.alertLevel].text;
     ctx.fillText("ALERT", 82, 238);
 
 };

@@ -1,32 +1,32 @@
-var enemy = {
+var gEnemy = {
     attackGroups: [],
     objList: undefined
 };
 
 /*************************************************/
-enemy.init = function(bop, d7) {
-    enemy.objList = [];
+gEnemy.init = function(bop, d7) {
+    gEnemy.objList = [];
 
     for (var i = 0; i < bop; i++ ) {
-        enemy.addBop();
+        gEnemy.addBop();
     }
 
     for (i = 0; i < d7; i++ ) {
-        enemy.addD7();
+        gEnemy.addD7();
     }
 
-    enemy.placeAttackGroups();
+    gEnemy.placeAttackGroups();
 };
 
 /*************************************************/
-enemy.addBop = function() {
-    var sprite = sector.spriteList.newSprite({id: 'bop', width: 64, height: 64, image: './images/klingon_sprite2.png', center: false});
+gEnemy.addBop = function() {
+    var sprite = gSector.spriteList.newSprite({id: 'bop', width: 64, height: 64, image: './images/klingon_sprite2.png', center: false});
 
     sprite.setPosition(750,180);
     sprite.setRotation(230);
     sprite.setHotSpot(32, 32);
 
-    enemy.objList.push({
+    gEnemy.objList.push({
         type: "bop",
         sprite: sprite
     });
@@ -37,24 +37,24 @@ var d7 = {
 };
 
 /*************************************************/
-enemy.addD7 = function() {
-    var sprite = sector.spriteList.newSprite({id: 'd7', width: 64, height: 64, image: './images/d7_sprite.png', center: false});
+gEnemy.addD7 = function() {
+    var sprite = gSector.spriteList.newSprite({id: 'd7', width: 64, height: 64, image: './images/d7_sprite.png', center: false});
 
     sprite.setPosition(300,400);
     sprite.setRotation(33);
     sprite.setHotSpot(32, 32);
 
-    enemy.objList.push({
+    gEnemy.objList.push({
         type: "d7",
         sprite: sprite
     });
 };
 
 /*************************************************/
-enemy.didCollide = function(torpedo) {
+gEnemy.didCollide = function(torpedo) {
     var hitObj = undefined;
-    enemy.objList.forEach(function(obj, index) {
-        if(sector.spriteList.collision(torpedo, obj.sprite, 0, true)) {
+    gEnemy.objList.forEach(function(obj, index) {
+        if(gSector.spriteList.collision(torpedo, obj.sprite, 0, true)) {
             hitObj = obj;
         }
     });
@@ -62,7 +62,7 @@ enemy.didCollide = function(torpedo) {
 };
 
 /*************************************************/
-enemy.placeAttackGroups = function() {
+gEnemy.placeAttackGroups = function() {
 
     for (var i = 1; i <= 3; i++) {  // 'i' is number of ships in each attack group. There are 5 attack groups for each number 1-3
         for (var ag = 0; ag < 5; ag++) {
@@ -72,12 +72,12 @@ enemy.placeAttackGroups = function() {
             do {
                 sx = jgl.randomRange(1,13);
                 sy = jgl.randomRange(0,2);
-                if (!gmap.data[sx][sy].taken){
+                if (!gMap.data[sx][sy].taken){
                     placed = true;
                 }
             }while(!placed);
 
-            gmap.data[sx][sy].taken = true;
+            gMap.data[sx][sy].taken = true;
             var attackGroup = [];
 
             var bx = jgl.randomRange(3000, 10000);
@@ -90,17 +90,17 @@ enemy.placeAttackGroups = function() {
                 attackGroup[s] = {
                     x: x,
                     y: y,
-                    globalX: sx * gmap.SECTOR_PIXELS + x,
-                    globalY: (sy - 2) * gmap.SECTOR_PIXELS + y,
-                    targetX: gmap.PARSEC_PIXELS / 2,    // Update to point at starbase or planet
-                    targetY: gmap.PARSEC_PIXELS / 2,
+                    globalX: sx * gMap.SECTOR_PIXELS + x,
+                    globalY: (sy - 2) * gMap.SECTOR_PIXELS + y,
+                    targetX: gMap.PARSEC_PIXELS / 2,    // Update to point at starbase or planet
+                    targetY: gMap.PARSEC_PIXELS / 2,
                     damage: 0,
                     weapons: 100,
                     drive: 100,
                     type: "D7"
                 }
             }
-            enemy.attackGroups.push(attackGroup);
+            gEnemy.attackGroups.push(attackGroup);
         }
     }
 };

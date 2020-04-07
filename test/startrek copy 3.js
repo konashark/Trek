@@ -104,10 +104,10 @@ function jglApp() {
 
     g.spriteList = jgl.newSpriteList();
 
-    g.ship.sprite = g.spriteList.newSprite({id: 'ship', width: g.TILE_SIZE, height: g.TILE_SIZE, image: './images/enterprise_sprite.png'});
-    g.ship.sprite.setPosition(g.ship.viewportX, g.ship.viewportY);
-    g.ship.sprite.setRotation(g.ship.rotation);
-    g.ship.sprite.setHotSpot(g.TILE_SIZE / 2, g.TILE_SIZE / 2);
+    g.gShip.sprite = g.spriteList.newSprite({id: 'ship', width: g.TILE_SIZE, height: g.TILE_SIZE, image: './images/enterprise_sprite.png'});
+    g.gShip.sprite.setPosition(g.gShip.viewportX, g.gShip.viewportY);
+    g.gShip.sprite.setRotation(g.gShip.rotation);
+    g.gShip.sprite.setHotSpot(g.TILE_SIZE / 2, g.TILE_SIZE / 2);
 
     g.bop.sprite = g.spriteList.newSprite({id: 'bop', width: g.TILE_SIZE, height: g.TILE_SIZE, image: './images/klingon_sprite2.png'});
     g.bop.sprite.setPosition(750,180);
@@ -136,94 +136,94 @@ function gameLoop()
 function updateShip() {
 
     if (jgl.KEY_STATE[jgl.KEYS.FORWARD_SLASH]){
-        g.ship.allstop = true;
+        g.gShip.allstop = true;
     }
 
     // Is the player rotating?
     if (jgl.KEY_STATE[jgl.KEYS.LEFT]){
-        g.ship.targetRotation -= 6;
-        if (g.ship.targetRotation < 0) {
-            g.ship.targetRotation += 360;
+        g.gShip.targetRotation -= 6;
+        if (g.gShip.targetRotation < 0) {
+            g.gShip.targetRotation += 360;
         }
     }
 
     if (jgl.KEY_STATE[jgl.KEYS.RIGHT]){
-        g.ship.targetRotation += 6;
-        if (g.ship.targetRotation > 360) {
-            g.ship.targetRotation -= 360;
+        g.gShip.targetRotation += 6;
+        if (g.gShip.targetRotation > 360) {
+            g.gShip.targetRotation -= 360;
         }
     }
 
     // Update rotation and convert to radians
-    var delta = g.ship.targetRotation - g.ship.rotation;
+    var delta = g.gShip.targetRotation - g.gShip.rotation;
 
     if (delta) {
         if (delta  > 180) {
-            g.ship.rotation -= 1;
+            g.gShip.rotation -= 1;
         } else if (delta < -180) {
-            g.ship.rotation += 1;
+            g.gShip.rotation += 1;
         } else if (delta > 0)  {
-            g.ship.rotation += 1;
+            g.gShip.rotation += 1;
         } else {
-            g.ship.rotation -= 1;
+            g.gShip.rotation -= 1;
         }
 
-        if (g.ship.rotation < 0) {
-            g.ship.rotation += 360;
+        if (g.gShip.rotation < 0) {
+            g.gShip.rotation += 360;
         }
-        if (g.ship.rotation > 360) {
-            g.ship.rotation -= 360;
+        if (g.gShip.rotation > 360) {
+            g.gShip.rotation -= 360;
         }
     }
-    g.ship.radians = g.ship.rotation * Math.PI/180;
+    g.gShip.radians = g.gShip.rotation * Math.PI/180;
 
-    if (g.ship.allstop) {
-        g.ship.thrust *= .95;
-        if (g.ship.thrust < .1) {
-            g.ship.thrust = 0;
-            g.ship.allstop = false;
+    if (g.gShip.allstop) {
+        g.gShip.thrust *= .95;
+        if (g.gShip.thrust < .1) {
+            g.gShip.thrust = 0;
+            g.gShip.allstop = false;
         }
     }
     // Is the player accelerating?
     if (jgl.KEY_STATE[jgl.KEYS.UP]) {
-        g.ship.allstop = false;
-        if (g.ship.thrust < g.MAX_THRUST) {
-            g.ship.thrust += 0.1;
+        g.gShip.allstop = false;
+        if (g.gShip.thrust < g.MAX_THRUST) {
+            g.gShip.thrust += 0.1;
         }
     }
 
     if (jgl.KEY_STATE[jgl.KEYS.DOWN]) {
-        g.ship.thrust -= 0.1;
-        g.ship.thrust = g.ship.thrust;
-        if (g.ship.thrust < .1) {
-            g.ship.thrust = 0;
-            g.ship.allstop = false;
+        g.gShip.thrust -= 0.1;
+        g.gShip.thrust = g.gShip.thrust;
+        if (g.gShip.thrust < .1) {
+            g.gShip.thrust = 0;
+            g.gShip.allstop = false;
         }
     }
 
-    g.ship.thrustX = (Math.sin(g.ship.radians) / 4) * g.ship.thrust;
-    g.ship.thrustY = (Math.cos(g.ship.radians) / 4) * g.ship.thrust;
+    g.gShip.thrustX = (Math.sin(g.gShip.radians) / 4) * g.gShip.thrust;
+    g.gShip.thrustY = (Math.cos(g.gShip.radians) / 4) * g.gShip.thrust;
 
     // Update our ship's position
-    g.ship.x += g.ship.thrustX;
-    g.ship.y -= g.ship.thrustY;
+    g.gShip.x += g.gShip.thrustX;
+    g.gShip.y -= g.gShip.thrustY;
 
     // Keep us within the map's universe
-    if (g.ship.y > g.MAP_HEIGHT_PIXELS + (g.TILE_SIZE * 1.5)) {
-        g.ship.y = g.MAP_HEIGHT_PIXELS + (g.TILE_SIZE * 1.5);
-    } else if (g.ship.y < (g.TILE_SIZE * 2.5)) {
-        g.ship.y = g.TILE_SIZE * 2.5;
+    if (g.gShip.y > g.MAP_HEIGHT_PIXELS + (g.TILE_SIZE * 1.5)) {
+        g.gShip.y = g.MAP_HEIGHT_PIXELS + (g.TILE_SIZE * 1.5);
+    } else if (g.gShip.y < (g.TILE_SIZE * 2.5)) {
+        g.gShip.y = g.TILE_SIZE * 2.5;
     }
-    if (g.ship.x > g.MAP_WIDTH_PIXELS + (g.TILE_SIZE * 3)) {
-        g.ship.x = g.MAP_WIDTH_PIXELS + (g.TILE_SIZE * 3);
-    } else if (g.ship.x < (g.TILE_SIZE * 4)) {
-        g.ship.x = g.TILE_SIZE * 4;
+    if (g.gShip.x > g.MAP_WIDTH_PIXELS + (g.TILE_SIZE * 3)) {
+        g.gShip.x = g.MAP_WIDTH_PIXELS + (g.TILE_SIZE * 3);
+    } else if (g.gShip.x < (g.TILE_SIZE * 4)) {
+        g.gShip.x = g.TILE_SIZE * 4;
     }
 
-    //g.ship.sprite.setPosition(g.ship.x, g.ship.y);
-    g.mapX = g.ship.x - 448;
-    g.mapY = g.ship.y - 228;
-    g.ship.sprite.setRotation(g.ship.rotation);
+    //g.gShip.sprite.setPosition(g.gShip.x, g.gShip.y);
+    g.mapX = g.gShip.x - 448;
+    g.mapY = g.gShip.y - 228;
+    g.gShip.sprite.setRotation(g.gShip.rotation);
 
 }
 
@@ -234,9 +234,9 @@ function updateHelm() {
     var x = 32;
     var y = 436;
     var tab = 128;
-    g.overlaycontext.fillText("X:"+ g.ship.x.toFixed(2), x, y);
-    g.overlaycontext.fillText("Y:"+ g.ship.y.toFixed(2), x+=tab, y);
-    g.overlaycontext.fillText("dX:"+ g.ship.speedX.toFixed(2), x+=tab, y);
-    g.overlaycontext.fillText("dY:"+ g.ship.speedY.toFixed(2), x+=tab, y);
-    g.overlaycontext.fillText("Rot:"+ g.ship.rotation.toFixed(2), x+=tab, y);
+    g.overlaycontext.fillText("X:"+ g.gShip.x.toFixed(2), x, y);
+    g.overlaycontext.fillText("Y:"+ g.gShip.y.toFixed(2), x+=tab, y);
+    g.overlaycontext.fillText("dX:"+ g.gShip.speedX.toFixed(2), x+=tab, y);
+    g.overlaycontext.fillText("dY:"+ g.gShip.speedY.toFixed(2), x+=tab, y);
+    g.overlaycontext.fillText("Rot:"+ g.gShip.rotation.toFixed(2), x+=tab, y);
 }

@@ -18,13 +18,13 @@ var g = {
 
 function jglApp() {
     // Init sub-modules
-    sector.init();
-    gmap.init();
-    srs.init();
-    lrs.init();
-    comm.init();
-    info.init();
-    shipstatus.init();
+    gSector.init();
+    gMap.init();
+    gSrs.init();
+    gLrs.init();
+    gComm.init();
+    gInfo.init();
+    gShipstatus.init();
 
     document.addEventListener("keydown", function (ev) {
         //console.log("KEY: ", ev.keyCode);
@@ -43,7 +43,7 @@ function jglApp() {
         }
 
         if(ev.keyCode === jgl.KEYS.O){
-            ship.enterOrbit();
+            gShip.enterOrbit();
         }
     });
 
@@ -58,16 +58,16 @@ function jglApp() {
 function gameLoop() {
     // Tell the sub-modules to draw if active
     if (!g.paused && g.mode & MODE.MAPVIEW) {
-        sector.draw();
+        gSector.draw();
         g.missionTime++;
 
         // These elements don't need to update at 60fps, so throttle
         if (g.missionTime%10 === 0) {
-            srs.draw();
+            gSrs.draw();
             if (g.mode & MODE.LRS) {
-                lrs.draw();
+                gLrs.draw();
             }
-            shipstatus.draw();
+            gShipstatus.draw();
         }
     }
 

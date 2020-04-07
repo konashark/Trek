@@ -8,7 +8,7 @@
 // FULL MAP DIMENSIONS IN PIXELS: (491,520 x 491,520) =  241,591,910,400 pixels
 //
 
-var gmap = {
+var gMap = {
     data: [],
     PARSEC_DIM: 15,
     SECTOR_TILE_DIM: 128,
@@ -30,12 +30,12 @@ var gmap = {
 };
 
 /*************************************************/
-gmap.init = function() {
-    gmap.data = [];
-    for (var x = 0; x < gmap.PARSEC_DIM; x++) {
-        gmap.data[x] = [];
-        for (var y = 0; y < gmap.PARSEC_DIM; y++) {
-            gmap.data[x].push( {
+gMap.init = function() {
+    gMap.data = [];
+    for (var x = 0; x < gMap.PARSEC_DIM; x++) {
+        gMap.data[x] = [];
+        for (var y = 0; y < gMap.PARSEC_DIM; y++) {
+            gMap.data[x].push( {
                 x: x,
                 y: y,
                 starbase: undefined,
@@ -46,38 +46,38 @@ gmap.init = function() {
         }
     }
 
-    gmap.placeSuns();
-    gmap.placePlanets();
-    gmap.placeStarbases();
-    gmap.placeHostiles();
+    gMap.placeSuns();
+    gMap.placePlanets();
+    gMap.placeStarbases();
+    gMap.placeHostiles();
 
-    sector.initSector(gmap.data[gmap.currentSectorX][gmap.currentSectorY]);
+    gSector.initSector(gMap.data[gMap.currentSectorX][gMap.currentSectorY]);
 };
 
 /*************************************************/
-gmap.currentSector = function() {
-    return gmap.data[gmap.currentSectorX][gmap.currentSectorY];
+gMap.currentSector = function() {
+    return gMap.data[gMap.currentSectorX][gMap.currentSectorY];
 };
 
 /*************************************************/
-gmap.placeSuns = function() {
+gMap.placeSuns = function() {
     var i, x, y;
     var placed = false;
 
-    for (i = 0; i < gmap.NUM_SUNS; i++) {
+    for (i = 0; i < gMap.NUM_SUNS; i++) {
         do {
             placed = false;
-            x = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-            y = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-            var sectorData = gmap.data[x][y];
+            x = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+            y = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+            var sectorData = gMap.data[x][y];
             if (!sectorData.sun) {
                 var sun = {
                     name: "Sun " + i,
-                    tileRow: jgl.randomRange(10, sector.MAP_ROWS - 10),
-                    tileCol: jgl.randomRange(10, sector.MAP_COLS - 10),
+                    tileRow: jgl.randomRange(10, gSector.MAP_ROWS - 10),
+                    tileCol: jgl.randomRange(10, gSector.MAP_COLS - 10),
                     damage: 0
                 };
-                gmap.data[x][y].sun = sun;
+                gMap.data[x][y].sun = sun;
                 placed = true;
             }
         }while(!placed);
@@ -85,12 +85,12 @@ gmap.placeSuns = function() {
 };
 
 /*************************************************/
-gmap.placePlanets = function() {
+gMap.placePlanets = function() {
     var i, x, y;
     var placed = false;
 
     // Place Earth at center-fixed location
-    gmap.data[gmap.currentSectorX][gmap.currentSectorY].planet = {
+    gMap.data[gMap.currentSectorX][gMap.currentSectorY].planet = {
         name: "Earth",
         planetIndex: 0,
         tileRow: 127,
@@ -98,12 +98,12 @@ gmap.placePlanets = function() {
         damage: 0
     };
 
-    for (i = 1; i < gmap.NUM_PLANETS; i++) {
+    for (i = 1; i < gMap.NUM_PLANETS; i++) {
         do {
             placed = false;
-            x = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-            y = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-            var sectorData = gmap.data[x][y];
+            x = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+            y = jgl.randomRange(1,gMap.PARSEC_DIM-2);
+            var sectorData = gMap.data[x][y];
             if (sectorData.sun && !sectorData.planet) {
                 var planet = {
                     name: "Planet " + i,
@@ -112,7 +112,7 @@ gmap.placePlanets = function() {
                     tileCol: 127,
                     damage: 0
                 };
-                gmap.data[x][y].planet = planet;
+                gMap.data[x][y].planet = planet;
                 placed = true;
             }
         }while(!placed);
@@ -120,16 +120,16 @@ gmap.placePlanets = function() {
 };
 
 /*************************************************/
-gmap.placeStarbases = function() {
+gMap.placeStarbases = function() {
     var i, x, y;
     var placed = false;
 
-    for (i = 0; i < gmap.NUM_STARBASES; i++) {
+    for (i = 0; i < gMap.NUM_STARBASES; i++) {
         do {
             placed = false;
-            x = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-            y = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-            var sectorData = gmap.data[x][y];
+            x = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+            y = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+            var sectorData = gMap.data[x][y];
             if (!sectorData.sun && !sectorData.planet && !sectorData.starbase) {
                 var starbase = {
                     name: "Starbase " + i,
@@ -137,7 +137,7 @@ gmap.placeStarbases = function() {
                     tileCol: 127,
                     damage: 0
                 };
-                gmap.data[x][y].starbase = starbase;
+                gMap.data[x][y].starbase = starbase;
                 placed = true;
             }
         }while(!placed);
@@ -145,12 +145,12 @@ gmap.placeStarbases = function() {
 };
 
 /*************************************************/
-gmap.placeHostiles = function() {
+gMap.placeHostiles = function() {
     var i, x, y;
 
-    for (i = 0; i < gmap.NUM_HOSTILES; i++) {
-        x = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-        y = jgl.randomRange(0,gmap.PARSEC_DIM-1);
-        gmap.data[x][y].hostiles++;
+    for (i = 0; i < gMap.NUM_HOSTILES; i++) {
+        x = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+        y = jgl.randomRange(0,gMap.PARSEC_DIM-1);
+        gMap.data[x][y].hostiles++;
     }
 };

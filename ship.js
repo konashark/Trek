@@ -1,7 +1,7 @@
-var ship = {
+var gShip = {
     sprite: undefined,
     MAX_THRUST: 100,
-    x: sector.MAP_WIDTH_PIXELS / 2 + 128, y: sector.MAP_HEIGHT_PIXELS / 2 - 64,
+    x: gSector.MAP_WIDTH_PIXELS / 2 + 128, y: gSector.MAP_HEIGHT_PIXELS / 2 - 64,
     targetThrust: 0,
     thrust: 0,
     targetRotation: 0,
@@ -24,76 +24,76 @@ var ship = {
 };
 
 /*************************************************/
-ship.enterOrbit = function() {
+gShip.enterOrbit = function() {
     // ORBIT
-    if (ship.orbit.state !== ship.orbit.states.READY) {
+    if (gShip.orbit.state !== gShip.orbit.states.READY) {
         console.log("TBD: Orbit cancelled");
-        ship.orbit.state = ship.orbit.states.READY;
-        ship.targetThrust = ship.thrust = 10;
+        gShip.orbit.state = gShip.orbit.states.READY;
+        gShip.targetThrust = gShip.thrust = 10;
         return;
     }
-    var data = gmap.currentSector();
+    var data = gMap.currentSector();
     if (!data.planet) {
         console.log("TBD: There is no planet in this sector!");
         return;
     }
     // Are we close enough?
-    var dist = jgl.distance(ship.x, ship.y, sector.SECTOR_CENTER_COORD, sector.SECTOR_CENTER_COORD);
+    var dist = jgl.distance(gShip.x, gShip.y, gSector.SECTOR_CENTER_COORD, gSector.SECTOR_CENTER_COORD);
     console.log("Distance: " + dist);
     if (dist < 132 || dist > 200) {
         console.log("TBD: Out of range for orbit");
         return;
     }
-    ship.orbit.state = ship.orbit.states.IN_PROGRESS;
-    ship.orbit.angle = jgl.rectToPolar(sector.SECTOR_CENTER_COORD, sector.SECTOR_CENTER_COORD, ship.x, ship.y).angle;
-    ship.targetRotation = (ship.orbit.angle + 90) % 360;
-    ship.orbit.distance = dist;
+    gShip.orbit.state = gShip.orbit.states.IN_PROGRESS;
+    gShip.orbit.angle = jgl.rectToPolar(gSector.SECTOR_CENTER_COORD, gSector.SECTOR_CENTER_COORD, gShip.x, gShip.y).angle;
+    gShip.targetRotation = (gShip.orbit.angle + 90) % 360;
+    gShip.orbit.distance = dist;
 };
 
 /*************************************************/
-ship.prepOrbit = function() {
-    if (ship.doRotation()) {
-        ship.sprite.setRotation(ship.rotation);
+gShip.prepOrbit = function() {
+    if (gShip.doRotation()) {
+        gShip.sprite.setRotation(gShip.rotation);
     } else {
-        ship.orbit.state = ship.orbit.states.ORBITING;
+        gShip.orbit.state = gShip.orbit.states.ORBITING;
     }
 };
 
 /*************************************************/
-ship.doOrbit = function() {
-    ship.orbit.angle  = (ship.orbit.angle + .15) % 360;
+gShip.doOrbit = function() {
+    gShip.orbit.angle  = (gShip.orbit.angle + .15) % 360;
 
-    ship.targetRotation = ship.rotation = (ship.orbit.angle + 90) % 360;
-    ship.sprite.setRotation(ship.rotation);
+    gShip.targetRotation = gShip.rotation = (gShip.orbit.angle + 90) % 360;
+    gShip.sprite.setRotation(gShip.rotation);
 
-    ship.radians = ship.orbit.angle * Math.PI/180;
-    ship.x = sector.SECTOR_CENTER_COORD + (Math.sin(ship.radians)) * (ship.orbit.distance);
-    ship.y = sector.SECTOR_CENTER_COORD - (Math.cos(ship.radians)) * (ship.orbit.distance);
+    gShip.radians = gShip.orbit.angle * Math.PI/180;
+    gShip.x = gSector.SECTOR_CENTER_COORD + (Math.sin(gShip.radians)) * (gShip.orbit.distance);
+    gShip.y = gSector.SECTOR_CENTER_COORD - (Math.cos(gShip.radians)) * (gShip.orbit.distance);
 
-    sector.mapX = ship.x - sector.CENTER_X;
-    sector.mapY = ship.y - sector.CENTER_Y;
+    gSector.mapX = gShip.x - gSector.CENTER_X;
+    gSector.mapY = gShip.y - gSector.CENTER_Y;
 };
 
 /*************************************************/
-ship.doRotation = function() {
-    var delta = ship.targetRotation.toFixed(1) - ship.rotation.toFixed(1);
+gShip.doRotation = function() {
+    var delta = gShip.targetRotation.toFixed(1) - gShip.rotation.toFixed(1);
 
     if (delta) {
         if (delta > 180) {
-            ship.rotation -= 1;
+            gShip.rotation -= 1;
         } else if (delta < -180) {
-            ship.rotation += 1;
+            gShip.rotation += 1;
         } else if (delta > 0) {
-            ship.rotation += 1;
+            gShip.rotation += 1;
         } else {
-            ship.rotation -= 1;
+            gShip.rotation -= 1;
         }
 
-        if (ship.rotation < 0) {
-            ship.rotation += 360;
+        if (gShip.rotation < 0) {
+            gShip.rotation += 360;
         }
-        if (ship.rotation > 360) {
-            ship.rotation -= 360;
+        if (gShip.rotation > 360) {
+            gShip.rotation -= 360;
         }
     }
 
@@ -101,154 +101,154 @@ ship.doRotation = function() {
 };
 
 /*************************************************/
-ship.init = function() {
-    ship.sprite = sector.spriteList.newSprite({id: 'ship', width: 64, height: 64, image: './images/enterprise_sprite.png'});
-    ship.sprite.setPosition(sector.CENTER_X, sector.CENTER_Y);
-    ship.sprite.setRotation(ship.rotation);
-    ship.sprite.setHotSpot(64 / 2, 64 / 2);
+gShip.init = function() {
+    gShip.sprite = gSector.spriteList.newSprite({id: 'ship', width: 64, height: 64, image: './images/enterprise_sprite.png'});
+    gShip.sprite.setPosition(gSector.CENTER_X, gSector.CENTER_Y);
+    gShip.sprite.setRotation(gShip.rotation);
+    gShip.sprite.setHotSpot(64 / 2, 64 / 2);
 };
 
 /*************************************************/
-ship.update = function() {
+gShip.update = function() {
 
-    ship.processKeys();
-    if (ship.orbit.state) {
-        if (ship.orbit.state === ship.orbit.states.IN_PROGRESS) {
-            ship.prepOrbit();
+    gShip.processKeys();
+    if (gShip.orbit.state) {
+        if (gShip.orbit.state === gShip.orbit.states.IN_PROGRESS) {
+            gShip.prepOrbit();
         }
-        if (ship.orbit.state === ship.orbit.states.ORBITING) {
-            ship.doOrbit();
+        if (gShip.orbit.state === gShip.orbit.states.ORBITING) {
+            gShip.doOrbit();
         }
         return;
     }
 
     // ROTATION
     // Turn ship towards the target rotation position
-    if (ship.doRotation()) {
-        if (ship.targetThrust < 25 && !ship.autoBrake) {
-            ship.autoBrake = ship.targetThrust || 1;
-            ship.targetThrust = 25;
+    if (gShip.doRotation()) {
+        if (gShip.targetThrust < 25 && !gShip.autoBrake) {
+            gShip.autoBrake = gShip.targetThrust || 1;
+            gShip.targetThrust = 25;
         }
     } else {
         // If ship was turning and now it's not, reset the original speed
-        if (ship.autoBrake) {
-            ship.autoBrake = 0;
+        if (gShip.autoBrake) {
+            gShip.autoBrake = 0;
         }
     }
 
-    ship.radians = ship.rotation * Math.PI/180;
-    ship.sprite.setRotation(ship.rotation);
+    gShip.radians = gShip.rotation * Math.PI/180;
+    gShip.sprite.setRotation(gShip.rotation);
 
     // SPEED
-    if (ship.targetThrust > ship.thrust) {
-        ship.thrust += 1;
-    } else if (ship.targetThrust < ship.thrust) {
-        ship.thrust -= 1;
+    if (gShip.targetThrust > gShip.thrust) {
+        gShip.thrust += 1;
+    } else if (gShip.targetThrust < gShip.thrust) {
+        gShip.thrust -= 1;
     }
 
-    if (ship.thrust < 0) {
-        ship.thrust = 0;
+    if (gShip.thrust < 0) {
+        gShip.thrust = 0;
     }
 
     // Update our ship's position
-    ship.x += (Math.sin(ship.radians) / 4) * (ship.thrust / 10);
-    ship.y -= (Math.cos(ship.radians) / 4) * (ship.thrust / 10);
+    gShip.x += (Math.sin(gShip.radians) / 4) * (gShip.thrust / 10);
+    gShip.y -= (Math.cos(gShip.radians) / 4) * (gShip.thrust / 10);
 
     // Keep us within the map's universe
-    if (ship.y > sector.MAP_HEIGHT_PIXELS + (sector.TILE_SIZE * 1.5)) {
-        ship.y = sector.MAP_HEIGHT_PIXELS + (sector.TILE_SIZE * 1.5);
-    } else if (ship.y < (sector.TILE_SIZE * 2.5)) {
-        ship.y = sector.TILE_SIZE * 2.5;
+    if (gShip.y > gSector.MAP_HEIGHT_PIXELS + (gSector.TILE_SIZE * 1.5)) {
+        gShip.y = gSector.MAP_HEIGHT_PIXELS + (gSector.TILE_SIZE * 1.5);
+    } else if (gShip.y < (gSector.TILE_SIZE * 2.5)) {
+        gShip.y = gSector.TILE_SIZE * 2.5;
     }
-    if (ship.x > sector.MAP_WIDTH_PIXELS + (sector.TILE_SIZE * 3)) {
-        ship.x = sector.MAP_WIDTH_PIXELS + (sector.TILE_SIZE * 3);
-    } else if (ship.x < (sector.TILE_SIZE * 4)) {
-        ship.x = sector.TILE_SIZE * 4;
+    if (gShip.x > gSector.MAP_WIDTH_PIXELS + (gSector.TILE_SIZE * 3)) {
+        gShip.x = gSector.MAP_WIDTH_PIXELS + (gSector.TILE_SIZE * 3);
+    } else if (gShip.x < (gSector.TILE_SIZE * 4)) {
+        gShip.x = gSector.TILE_SIZE * 4;
     }
 
     // Set Map layer to be positioned relative to our centered ship
-    sector.mapX = ship.x - sector.CENTER_X; //448;
-    sector.mapY = ship.y - sector.CENTER_Y; //228;
+    gSector.mapX = gShip.x - gSector.CENTER_X; //448;
+    gSector.mapY = gShip.y - gSector.CENTER_Y; //228;
 };
 
 /*************************************************/
-ship.processKeys = function() {
+gShip.processKeys = function() {
     if (g.mode & MODE.LRS) {
         return;
     }
 
-    shields.active = jgl.KEY_STATE[jgl.KEYS.FORWARD_SLASH];
+    gShields.active = jgl.KEY_STATE[jgl.KEYS.FORWARD_SLASH];
 
     // Is the player rotating?
     if (jgl.KEY_STATE[jgl.KEYS.LEFT]){
-        navOv.active = true;
-        ship.targetRotation -= 3;
-        if (ship.targetRotation < 0) {
-            ship.targetRotation += 360;
+        gNavOvly.active = true;
+        gShip.targetRotation -= 3;
+        if (gShip.targetRotation < 0) {
+            gShip.targetRotation += 360;
         }
     } else if (jgl.KEY_STATE[jgl.KEYS.RIGHT]){
-        navOv.active = true;
-        ship.targetRotation += 3;
-        if (ship.targetRotation > 360) {
-            ship.targetRotation -= 360;
+        gNavOvly.active = true;
+        gShip.targetRotation += 3;
+        if (gShip.targetRotation > 360) {
+            gShip.targetRotation -= 360;
         }
     } else {
-        if (ship.targetRotation === ship.rotation)
-            navOv.active = false;
+        if (gShip.targetRotation === gShip.rotation)
+            gNavOvly.active = false;
     }
 
     if (jgl.KEY_STATE[jgl.KEYS.SPACE]) {
-        if (!ship.firing) {
-            torpedo.fire();
-            ship.firing = true;
+        if (!gShip.firing) {
+            gTorpedo.fire();
+            gShip.firing = true;
         }
     } else {
-        ship.firing = false;
+        gShip.firing = false;
     }
 
     // Is the player accelerating?
     if (jgl.KEY_STATE[jgl.KEYS.UP]) {
-        if (ship.targetThrust < ship.MAX_THRUST) {
-            ship.targetThrust += 1;
+        if (gShip.targetThrust < gShip.MAX_THRUST) {
+            gShip.targetThrust += 1;
         }
     }
 
     if (jgl.KEY_STATE[jgl.KEYS.DOWN]) {
-        ship.targetThrust -= 1;
-        if (ship.targetThrust < 0) {
-            ship.targetThrust = 0;
+        gShip.targetThrust -= 1;
+        if (gShip.targetThrust < 0) {
+            gShip.targetThrust = 0;
         }
     }
 
     if (jgl.KEY_STATE[jgl.KEYS.N0]) {
-        ship.targetThrust = 0;
+        gShip.targetThrust = 0;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N1]) {
-        ship.targetThrust = 10;
+        gShip.targetThrust = 10;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N2]) {
-        ship.targetThrust = 20;
+        gShip.targetThrust = 20;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N3]) {
-        ship.targetThrust = 30;
+        gShip.targetThrust = 30;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N4]) {
-        ship.targetThrust = 40;
+        gShip.targetThrust = 40;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N5]) {
-        ship.targetThrust = 50;
+        gShip.targetThrust = 50;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N6]) {
-        ship.targetThrust = 60;
+        gShip.targetThrust = 60;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N7]) {
-        ship.targetThrust = 70;
+        gShip.targetThrust = 70;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N8]) {
-        ship.targetThrust = 80;
+        gShip.targetThrust = 80;
     }
     if (jgl.KEY_STATE[jgl.KEYS.N9]) {
-        ship.targetThrust = 90;
+        gShip.targetThrust = 90;
     }
 
 };
