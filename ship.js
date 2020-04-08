@@ -70,8 +70,7 @@ gShip.doOrbit = function() {
     gShip.x = gSector.SECTOR_CENTER_COORD + (Math.sin(gShip.radians)) * (gShip.orbit.distance);
     gShip.y = gSector.SECTOR_CENTER_COORD - (Math.cos(gShip.radians)) * (gShip.orbit.distance);
 
-    gSector.mapX = gShip.x - gSector.CENTER_X;
-    gSector.mapY = gShip.y - gSector.CENTER_Y;
+    gSector.setMapCoordinates(gShip.x, gShip.y);
 };
 
 /*************************************************/
@@ -167,8 +166,7 @@ gShip.update = function() {
     }
 
     // Set Map layer to be positioned relative to our centered ship
-    gSector.mapX = gShip.x - gSector.CENTER_X; //448;
-    gSector.mapY = gShip.y - gSector.CENTER_Y; //228;
+    gSector.setMapCoordinates(gShip.x, gShip.y);
 };
 
 /*************************************************/

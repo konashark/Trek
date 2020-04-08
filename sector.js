@@ -87,6 +87,8 @@ gSector.init = function() {
     gShip.init();
     gPhaser.init();
     gTorpedo.init();
+
+    gEnemy.initSector();
 };
 
 /*************************************************/
@@ -185,8 +187,13 @@ gSector.initSector = function(sectorData) {
     for (var index = 0; index < 100; index++) {
         gSector.tmap.newTile({ index:index, img: makeTile(), x:0, y:0, w:gSector.TILE_SIZE, h:gSector.TILE_SIZE });
     }
+    gSector.tmap.drawMap(gSector.mapX, gSector.mapY, true); // Force refresh
+};
 
-    gEnemy.init(1,1);    // Create Romulan Birds-of-Prey and Klingon D7 cruiser
+/*************************************************/
+gSector.setMapCoordinates = function(x, y) {
+    gSector.mapX = x - gSector.CENTER_X;
+    gSector.mapY = y - gSector.CENTER_Y;
 };
 
 /*************************************************/

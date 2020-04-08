@@ -25,6 +25,8 @@ function jglApp() {
     gComm.init();
     gInfo.init();
     gShipstatus.init();
+    gEnemy.init();
+
 
     document.addEventListener("keydown", function (ev) {
         //console.log("KEY: ", ev.keyCode);

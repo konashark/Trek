@@ -4,9 +4,13 @@ var gEnemy = {
 };
 
 /*************************************************/
-gEnemy.init = function(bop, d7) {
+gEnemy.init = function() {
     gEnemy.objList = [];
+    gEnemy.placeAttackGroups();
+};
 
+/*************************************************/
+gEnemy.initSector = function(bop, d7) {
     for (var i = 0; i < bop; i++ ) {
         gEnemy.addBop();
     }
@@ -14,8 +18,6 @@ gEnemy.init = function(bop, d7) {
     for (i = 0; i < d7; i++ ) {
         gEnemy.addD7();
     }
-
-    gEnemy.placeAttackGroups();
 };
 
 /*************************************************/
