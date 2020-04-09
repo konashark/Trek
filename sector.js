@@ -111,6 +111,7 @@ gSector.initSector = function(sectorData) {
 
     if (gSector.data.planet) {
         mapData[63][63] = gSector.tile.PLANET + gSector.data.planet.planetIndex;
+        console.log("TBD: Arriving at planet " + gSector.data.planet.name);
     }
 
     if (gSector.data.sun) {

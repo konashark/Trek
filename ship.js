@@ -96,7 +96,7 @@ gShip.doRotation = function() {
         }
     }
 
-    return delta;
+    return Math.floor(delta);
 };
 
 /*************************************************/

@@ -26,7 +26,10 @@ var gMap = {
 
     planetsLost: 0,
     basesLost: 0,
-    numHostiles: 48
+    numHostiles: 48,
+
+    planetList: [],
+    starbaseList: [],
 };
 
 /*************************************************/
@@ -38,10 +41,13 @@ gMap.init = function() {
             gMap.data[x].push( {
                 x: x,
                 y: y,
+                parsecX: x * gSector.MAP_WIDTH_PIXELS,
+                parsecY: y * gSector.MAP_WIDTH_PIXELS,
                 starbase: undefined,
                 planet: undefined,
                 sun: undefined,
-                hostiles: 0
+                hostiles: 0,
+                underAttack: false
             });
         }
     }
@@ -88,15 +94,19 @@ gMap.placeSuns = function() {
 gMap.placePlanets = function() {
     var i, x, y;
     var placed = false;
+    var nameBaseIndex = jgl.random(gPlanetNames.length - gMap.NUM_PLANETS);
 
     // Place Earth at center-fixed location
     gMap.data[gMap.currentSectorX][gMap.currentSectorY].planet = {
         name: "Earth",
         planetIndex: 0,
+        sectorX: gMap.currentSectorX,
+        sectorY: gMap.currentSectorY,
         tileRow: 127,
         tileCol: 127,
         damage: 0
     };
+    gMap.planetList.push(planet);
 
     for (i = 1; i < gMap.NUM_PLANETS; i++) {
         do {
@@ -106,13 +116,16 @@ gMap.placePlanets = function() {
             var sectorData = gMap.data[x][y];
             if (sectorData.sun && !sectorData.planet) {
                 var planet = {
-                    name: "Planet " + i,
+                    name: gPlanetNames[nameBaseIndex + i],
                     planetIndex: i,
+                    sectorX: x,
+                    sectorY: y,
                     tileRow: 127,
                     tileCol: 127,
                     damage: 0
                 };
                 gMap.data[x][y].planet = planet;
+                gMap.planetList.push(planet);
                 placed = true;
             }
         }while(!placed);
@@ -133,11 +146,14 @@ gMap.placeStarbases = function() {
             if (!sectorData.sun && !sectorData.planet && !sectorData.starbase) {
                 var starbase = {
                     name: "Starbase " + i,
+                    sectorX: x,
+                    sectorY: y,
                     tileRow: 127,
                     tileCol: 127,
                     damage: 0
                 };
                 gMap.data[x][y].starbase = starbase;
+                gMap.starbaseList.push(starbase);
                 placed = true;
             }
         }while(!placed);

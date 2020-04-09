@@ -64,6 +64,11 @@ gEnemy.didCollide = function(torpedo) {
 };
 
 /*************************************************/
+gEnemy.addToSector = function() {
+    // Are any enemies in the specified sector. If so, activate them
+};
+
+/*************************************************/
 gEnemy.placeAttackGroups = function() {
 
     for (var i = 1; i <= 3; i++) {  // 'i' is number of ships in each attack group. There are 5 attack groups for each number 1-3
@@ -105,4 +110,9 @@ gEnemy.placeAttackGroups = function() {
             gEnemy.attackGroups.push(attackGroup);
         }
     }
+};
+
+/*************************************************/
+gEnemy.assignTargets = function() {
+    // Assign each attack group and desgtination planet or starbase
 };
