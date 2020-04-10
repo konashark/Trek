@@ -16,7 +16,7 @@ var gSector = {
     MAP_VIEWPORT_WIDTH_PIXELS: TILE_SIZE * TILES_WIDE,
     MAP_VIEWPORT_HEIGHT_PIXELS: TILE_SIZE * TILES_HIGH,
     TILE_SIZE: TILE_SIZE,
-    mapX: 0, mapY: 0,
+    mapX: TILE_SIZE * TILES_WIDE / 2, mapY: TILE_SIZE * TILES_WIDE / 2,
 
     canvas: undefined,
     context: undefined,

@@ -97,15 +97,19 @@ gMap.placePlanets = function() {
     var nameBaseIndex = jgl.random(gPlanetNames.length - gMap.NUM_PLANETS);
 
     // Place Earth at center-fixed location
-    gMap.data[gMap.currentSectorX][gMap.currentSectorY].planet = {
+    var planet = {
         name: "Earth",
         planetIndex: 0,
         sectorX: gMap.currentSectorX,
         sectorY: gMap.currentSectorY,
         tileRow: 127,
         tileCol: 127,
+        parsecX: (gMap.SECTOR_PIXELS * (gMap.currentSectorX + 0.5)),
+        parsecY: (gMap.SECTOR_PIXELS * (gMap.currentSectorY + 0.5)),
         damage: 0
     };
+
+    gMap.data[gMap.currentSectorX][gMap.currentSectorY].planet = planet;
     gMap.planetList.push(planet);
 
     for (i = 1; i < gMap.NUM_PLANETS; i++) {
@@ -122,6 +126,8 @@ gMap.placePlanets = function() {
                     sectorY: y,
                     tileRow: 127,
                     tileCol: 127,
+                    parsecX: (gMap.SECTOR_PIXELS * (x + 0.5)),
+                    parsecY: (gMap.SECTOR_PIXELS * (y + 0.5)),
                     damage: 0
                 };
                 gMap.data[x][y].planet = planet;
@@ -150,6 +156,8 @@ gMap.placeStarbases = function() {
                     sectorY: y,
                     tileRow: 127,
                     tileCol: 127,
+                    parsecX: (gMap.SECTOR_PIXELS * (x + 0.5)),
+                    parsecY: (gMap.SECTOR_PIXELS * (y + 0.5)),
                     damage: 0
                 };
                 gMap.data[x][y].starbase = starbase;
