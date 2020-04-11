@@ -6,15 +6,15 @@ var gTorpedo = {
 /*************************************************/
 gTorpedo.init = function() {
 
-    jgl.newImage('./images/torpedo.png', function(image) {
+    jgl.newImage('./images/torpedo2.png', function(image) {
         gTorpedo.image = image;
         for (var i = 0; i < 4; i++ ) {
             var t = {
-                sprite: gSector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 12, center: true }),
+                sprite: gSector.spriteList.newSprite({id: 'torpedo'+i, image: image, width: 8, height: 20, center: true }),
                 angle: 0,
                 distance: 24,
                 active: false,
-                fireSfx: new Audio('./sounds/laser.mp3'),
+                fireSfx: new Audio('./sounds/torpedo.mp3'),
                 explosionSfx: new Audio('./sounds/crash.mp3')
             };
             //t.sprite.setHotSpot(4, 6);
@@ -64,7 +64,7 @@ gTorpedo.init = function() {
         for (frame = 0; frame < 40; frame++) {
             gSector.explosionSprite.setAnimFrame(frame, explosionImg, frame * 88, 0, 88, 90);
         }
-        gSector.explosionSound = new Audio('./sounds/crash.mp3');
+        gSector.explosionSound = new Audio('./sounds/tinyexplosion.mp3');
 
         //loadComplete();
     });

@@ -86,24 +86,26 @@ gEnemy.placeAttackGroups = function() {
             var attackGroup = {
                 sectorX: sx,
                 sectorY: sy,
+                parsecX: 0,
+                parsecY: 0,
+                targetX: 0,    // Update to point at starbase or planet
+                targetY: 0,
+                angle: 0,
+                speed: 40,
                 type: "D7",
                 ships: []
             };
-
-            // Choose a base location within the sector around which we'll place some ships
-            var baseX = jgl.randomRange(3000, 10000);
-            var baseY = jgl.randomRange(3000, 10000);
+            attackGroup.parsecX = sx * gMap.SECTOR_PIXELS + jgl.randomRange(3000, 10000);  // Choose a base location within the sector around which we'll place some ships;
+            attackGroup.parsecY = (sy - 2) * gMap.SECTOR_PIXELS + jgl.randomRange(3000, 10000); // '-2' because we want two of the 3 rows to be outside of Federation space
 
             // Place 'i' number of ships into the attack group
             for (var s = 0; s < i; s++) {
                 var ship = {
                     // Place enemy ship
-                    x: baseX + jgl.random(700),     // Within sector map
-                    y: baseY + jgl.random(700),
-                    parsecX: 0,
-                    parsecY: 0,
-                    targetX: 0,    // Update to point at starbase or planet
-                    targetY: 0,
+                    xOffset: attackGroup.x + jgl.random(700),     // Within sector map
+                    yOffset: attackGroup.y + jgl.random(700),
+                    x: 0,   // Used to track coordinates while in current sector
+                    y: 0,
                     angle: 0,
                     speed: 0,
                     damage: 0,
@@ -111,8 +113,6 @@ gEnemy.placeAttackGroups = function() {
                     drive: 100,
                     type: "D7"
                 };
-                ship.parsecX = sx * gMap.SECTOR_PIXELS + ship.x,
-                ship.parsecY = (sy - 2) * gMap.SECTOR_PIXELS + ship.y, // '-2' because we want two of the 3 rows to be outside of Federation space
                 attackGroup.ships.push(ship);
             }
             gEnemy.attackGroups.push(attackGroup);
@@ -143,13 +143,22 @@ gEnemy.assignTargets = function() {
             destination = gMap.planetList[i - 8];
         }
         // Destination to somewhere near starbase/planet
-        gEnemy.attackGroups[i].targetX = destination.parsecX + (Math.sin(jgl.random()*(2*Math.PI)) * jgl.randomRange(180,300));
-        gEnemy.attackGroups[i].targetY = destination.parsecY - (Math.cos(jgl.random()*(2*Math.PI)) * jgl.randomRange(180,300));
+        gEnemy.attackGroups[i].targetX = destination.parsecX + (Math.sin(jgl.random()*(2*Math.PI)));
+        gEnemy.attackGroups[i].targetY = destination.parsecY - (Math.cos(jgl.random()*(2*Math.PI)));
     }
 };
 
 /*************************************************/
 gEnemy.updateFleetPosition = function() {
+
+    gEnemy.attackGroups.forEach(function(ag, i){
+        ag.angle = jgl.rectToPolar(ag.parsecX, ag.parsecY, ag.targetX, ag.targetY).angle;
+
+        var radians = ag.angle * Math.PI/180;
+        //ship.sprite.setRotation(ship.rotation);
+        ag.parsecX += (Math.sin(ag.radians) / 4) * (ag.speed / 10);
+        ag.parsecY -= (Math.cos(ag.radians) / 4) * (ag.speed / 10);
+    });
 };
 
 /*************************************************/
