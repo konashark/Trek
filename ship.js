@@ -1,7 +1,8 @@
 var gShip = {
     sprite: undefined,
     MAX_THRUST: 100,
-    x: gSector.MAP_WIDTH_PIXELS / 2 + 128, y: gSector.MAP_HEIGHT_PIXELS / 2 - 64,
+    x: gSector.MAP_WIDTH_PIXELS / 2 + 128,
+    y: gSector.MAP_HEIGHT_PIXELS / 2 - 64,
     targetThrust: 0,
     thrust: 0,
     targetRotation: 0,

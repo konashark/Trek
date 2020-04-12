@@ -10,8 +10,10 @@ var MODE = {
 
 var g = {
     paused: false,
+    mute: true,
     mode: MODE.MAPVIEW,
-    missionTime: 0
+    missionTime: 0,
+    bridgeAudio: undefined
 };
 
 //g = Object.assign(g, {});
@@ -26,6 +28,13 @@ function jglApp() {
     gInfo.init();
     gShipstatus.init();
     gEnemy.init();
+
+    g.bridgeAudio = new Audio('./sounds/bridgebackground.mp3');
+    $("body").on("keydown", function () {
+        g.bridgeAudio.loop = true;
+//        g.bridgeAudio.play();
+        $("body").off("keydown");
+    });
 
 
     document.addEventListener("keydown", function (ev) {
@@ -46,6 +55,15 @@ function jglApp() {
 
         if(ev.keyCode === jgl.KEYS.O){
             gShip.enterOrbit();
+        }
+
+        if(ev.keyCode === jgl.KEYS.M){
+            g.mute = !g.mute;
+            if (g.mute) {
+                g.bridgeAudio.pause();
+            } else {
+                g.bridgeAudio.play();
+            }
         }
     });
 

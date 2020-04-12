@@ -69,7 +69,15 @@ gMap.placeSuns = function() {
     var i, x, y;
     var placed = false;
 
-    for (i = 0; i < gMap.NUM_SUNS; i++) {
+    var sun = {
+        name: "Sun 0",
+        tileRow: jgl.randomRange(25, gSector.MAP_ROWS - 10),
+        tileCol: jgl.randomRange(25, 50),
+        damage: 0
+    };
+    gMap.data[7][7].sun = sun;
+
+    for (i = 1; i < gMap.NUM_SUNS; i++) {
         do {
             placed = false;
             x = jgl.randomRange(0,gMap.PARSEC_DIM-1);
