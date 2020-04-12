@@ -18,6 +18,7 @@
 
 .wall{
     background: url(../images/hyperspace_backdrop.jpg);
+//    background: url(../images/fractal-fire.jpg);
     background-size: cover;
 }
 

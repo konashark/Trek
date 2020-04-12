@@ -30,6 +30,7 @@ var gSector = {
 
     data: undefined,
 
+    conflict: false,
     explosionSprite: undefined,
     explosionSound: undefined,
 
@@ -77,7 +78,6 @@ gSector.init = function() {
 
     // Initialize navigation overlay
     gNavOvly.init();
-    gPhaser.init();
     gShields.init();
 
     // Create Sprite List

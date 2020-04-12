@@ -71,6 +71,10 @@ function gameLoop() {
             }
             gShipstatus.draw();
         }
+        // Every 5 seconds, update the enemy fleet locations
+        if (g.missionTime%300 === 0) {
+            gEnemy.updateFleetPosition();
+        }
     }
 
     window.requestAnimFrame(gameLoop);

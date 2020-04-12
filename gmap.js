@@ -55,7 +55,6 @@ gMap.init = function() {
     gMap.placeSuns();
     gMap.placePlanets();
     gMap.placeStarbases();
-    gMap.placeHostiles();
 
     gSector.initSector(gMap.data[gMap.currentSectorX][gMap.currentSectorY]);
 };
@@ -165,16 +164,5 @@ gMap.placeStarbases = function() {
                 placed = true;
             }
         }while(!placed);
-    }
-};
-
-/*************************************************/
-gMap.placeHostiles = function() {
-    var i, x, y;
-
-    for (i = 0; i < gMap.NUM_HOSTILES; i++) {
-        x = jgl.randomRange(0,gMap.PARSEC_DIM-1);
-        y = jgl.randomRange(0,gMap.PARSEC_DIM-1);
-        gMap.data[x][y].hostiles++;
     }
 };

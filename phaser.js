@@ -2,7 +2,8 @@ var gPhaser = {
     active: false,
     offsetX: undefined,
     offsetY: undefined,
-    sfx: undefined
+    sfx: undefined,
+    instance: 0,
 };
 
 /*************************************************/
@@ -14,18 +15,23 @@ gPhaser.init = function(context) {
     gPhaser.sfx = new Audio('./sounds/phaser.mp3');
 
     $('#overlaycanvas').mousedown(gPhaser.fire);
-    $('#overlaycanvas').mouseup(function() {
-        gPhaser.sfx.pause();
-        gPhaser.active = false;
-    })
 };
 
 /*************************************************/
 gPhaser.fire = function(event) {
+    gPhaser.sfx.currentTime = 0;
     gPhaser.sfx.play();
     gPhaser.active = true;
     gPhaser.offsetX = event.offsetX;
     gPhaser.offsetY = event.offsetY;
+    gPhaser.instance++;
+
+    setTimeout(function(instance) {
+        if (instance === gPhaser.instance) {
+            gPhaser.active = false;
+            gPhaser.sfx.pause();
+        }
+    }, 650, gPhaser.instance);
 };
 
 /*************************************************/

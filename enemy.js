@@ -85,18 +85,21 @@ gEnemy.placeAttackGroups = function() {
 
             var attackGroup = {
                 sectorX: sx,
-                sectorY: sy,
+                sectorY: sy - 2, // '-2' because we want two of the 3 rows to be outside of Federation space top start
                 parsecX: 0,
                 parsecY: 0,
                 targetX: 0,    // Update to point at starbase or planet
                 targetY: 0,
+                targetSectorX: 0,
+                targetSectorY: 0,
                 angle: 0,
                 speed: 40,
                 type: "D7",
+                hasArrived: false,
                 ships: []
             };
-            attackGroup.parsecX = sx * gMap.SECTOR_PIXELS + jgl.randomRange(3000, 10000);  // Choose a base location within the sector around which we'll place some ships;
-            attackGroup.parsecY = (sy - 2) * gMap.SECTOR_PIXELS + jgl.randomRange(3000, 10000); // '-2' because we want two of the 3 rows to be outside of Federation space
+            attackGroup.parsecX = attackGroup.sectorX * gMap.SECTOR_PIXELS + jgl.randomRange(2500, 30000);  // Choose a base location within the sector around which we'll place some ships;
+            attackGroup.parsecY = attackGroup.sectorY * gMap.SECTOR_PIXELS + jgl.randomRange(2500, 30000);
 
             // Place 'i' number of ships into the attack group
             for (var s = 0; s < i; s++) {
@@ -109,8 +112,10 @@ gEnemy.placeAttackGroups = function() {
                     angle: 0,
                     speed: 0,
                     damage: 0,
-                    weapons: 100,
+                    phasers: 100,
+                    torps: 8,
                     drive: 100,
+                    state: 0,   // On course, fleeing, attacking
                     type: "D7"
                 };
                 attackGroup.ships.push(ship);
@@ -143,21 +148,49 @@ gEnemy.assignTargets = function() {
             destination = gMap.planetList[i - 8];
         }
         // Destination to somewhere near starbase/planet
-        gEnemy.attackGroups[i].targetX = destination.parsecX + (Math.sin(jgl.random()*(2*Math.PI)));
-        gEnemy.attackGroups[i].targetY = destination.parsecY - (Math.cos(jgl.random()*(2*Math.PI)));
+        gEnemy.attackGroups[i].targetX = destination.parsecX;
+        gEnemy.attackGroups[i].targetY = destination.parsecY;
+        gEnemy.attackGroups[i].targetSectorX = destination.sectorX;
+        gEnemy.attackGroups[i].targetSectorY = destination.sectorY;
+
+        destination.targetedBy = gEnemy.attackGroups[i];
     }
 };
 
 /*************************************************/
 gEnemy.updateFleetPosition = function() {
+    console.log("Updating attack fleet");
 
     gEnemy.attackGroups.forEach(function(ag, i){
-        ag.angle = jgl.rectToPolar(ag.parsecX, ag.parsecY, ag.targetX, ag.targetY).angle;
+        if (ag.hasArrived) {
+            return;
+        }
+        var vector = jgl.rectToPolar(ag.parsecX, ag.parsecY, ag.targetX, ag.targetY);
+        ag.angle = vector.angle;
+        if (vector.distance < 100) {
+            ag.hasArrived = true;
+        }
 
         var radians = ag.angle * Math.PI/180;
-        //ship.sprite.setRotation(ship.rotation);
-        ag.parsecX += (Math.sin(ag.radians) / 4) * (ag.speed / 10);
-        ag.parsecY -= (Math.cos(ag.radians) / 4) * (ag.speed / 10);
+        ag.parsecX += ((Math.sin(radians) / 4) * (ag.speed / 10) * 300); // '* 300' because we only call this routine every 300 game loops (5 seconds)
+        ag.parsecY -= ((Math.cos(radians) / 4) * (ag.speed / 10) * 300);
+
+        // Have we changed sectors?
+        var sectorX = Math.floor(ag.parsecX / (gMap.SECTOR_PIXELS));
+        var sectorY = Math.floor(ag.parsecY / (gMap.SECTOR_PIXELS));
+
+        if ((sectorX !== ag.sectorX) || (sectorY !== ag.sectorY)) {
+            // Changed sectors!
+            console.log("Attack group "+i+" has entered sector ["+sectorX+"]["+sectorY+"]");
+
+            // Remove hostiles from previous sector
+            // TBD
+            ag.sectorX = sectorX;
+            ag.sectorY = sectorY;
+
+            // Add hostiles to new sector
+            // TBD
+        }
     });
 };
 

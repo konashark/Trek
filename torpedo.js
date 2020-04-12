@@ -6,7 +6,7 @@ var gTorpedo = {
 /*************************************************/
 gTorpedo.init = function() {
 
-    jgl.newImage('./images/torpedo2.png', function(image) {
+    jgl.newImage('./images/torpedo.png', function(image) {
         gTorpedo.image = image;
         for (var i = 0; i < 4; i++ ) {
             var t = {

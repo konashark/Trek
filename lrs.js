@@ -132,7 +132,7 @@ gLrs.draw = function() {
     ctx.strokeStyle = "#C80";
     ctx.fillStyle = "#FC0";
     ctx.font = "15px sans-serif";
-    ctx.fillText("LONG-RANGE NAVIGATION", 50, 20);
+    ctx.fillText("LONG-RANGE NAVIGATION", 50, 30);
     ctx.font = "16px sans-serif";
 
     // Indicate which sector we're navigating to
@@ -191,8 +191,17 @@ gLrs.draw = function() {
 
     // Update header - show hyperjump distance
     gLrs.distance = jgl.distance(gMap.currentSectorX, gMap.currentSectorY, gLrs.mx, gLrs.my).toFixed(2);
-    ctx.fillText("DIST: " + gLrs.distance, 320, 20);
-    ctx.fillText("ENERGY REQUIRED: " + ~~(gLrs.distance * 10000), 450, 20);
+    ctx.fillText("DIST: " + gLrs.distance, 320, 30);
+    ctx.fillText("ENERGY REQUIRED: " + ~~(gLrs.distance * 10000), 450, 30);
 
+    // Show attack fleet positions (debug only)
+    ctx.fillStyle = "#A11";
+    var mapXScaler = (gLrs.CELL_WIDTH * gMap.PARSEC_DIM) / gMap.PARSEC_PIXELS;
+    var mapYScaler = (gLrs.CELL_HEIGHT * gMap.PARSEC_DIM) / gMap.PARSEC_PIXELS;
+    gEnemy.attackGroups.forEach(function(v,i) {
+        x = v.parsecX * mapXScaler;
+        y = v.parsecY * mapYScaler;
+        ctx.fillRect(46 + x, 46 + y, 8, 8)
+    });
 };
 
